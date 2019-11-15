@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activitys.Login">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_logo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/logo_margin_top"
+                android:src="@drawable/logo_nutrisolver_reduzido"
+                android:contentDescription="imagem logo" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/img_logo"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="30dp">
+
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/btn_login_com_google"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginStart="50dp">
+                </com.google.android.gms.common.SignInButton>
+
+                <com.facebook.login.widget.LoginButton
+                    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+                    facebook:com_facebook_login_text="@string/fazer_login_com_facebook"
+                    facebook:com_facebook_logout_text="@string/sair"
+                    android:id="@+id/btn_login_com_facebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:layout_marginEnd="53dp"
+                    android:layout_marginStart="53dp"
+                    android:layout_marginTop="15dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ou"
+                    android:layout_marginTop="25dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="40dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/login_input_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/senha"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="15dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/login_input_senha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        style="@style/botao_confirmar"
+                        android:id="@+id/btn_login_com_senha"
+                        android:layout_width="match_parent"
+                        android:text="@string/login" />
+
+                    <TextView
+                        android:id="@+id/btn_registrar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/btn_login_com_senha"
+                        android:layout_alignStart="@id/btn_login_com_senha"
+                        android:layout_marginTop="15dp"
+                        android:clickable="true"
+                        android:text="@string/registrar"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/btn_recuperar_senha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/btn_login_com_senha"
+                        android:layout_alignEnd="@id/btn_login_com_senha"
+                        android:layout_marginTop="15dp"
+                        android:clickable="true"
+                        android:text="@string/recuperar_senha"
+                        android:focusable="true" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/login_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+</FrameLayout>

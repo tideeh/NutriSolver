@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:padding="20dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/lista_lote_titulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:fontFamily="@font/exo_2"
+            android:text="Titúlo"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:paddingStart="30dp"
+            android:typeface="normal" />
+
+        <ImageView
+            android:id="@+id/lista_lote_click"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/list_click_icon"/>
+
+    </LinearLayout>
+
+</LinearLayout>

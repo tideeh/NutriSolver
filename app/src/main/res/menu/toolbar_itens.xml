@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/miMinhaConta"
+        android:icon="@drawable/account_icon"
+        android:title="Minha Conta"
+        app:showAsAction="ifRoom">
+
+    </item>
+    <item
+        android:id="@+id/miDeslogar"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="Sair"
+        app:showAsAction="never">
+
+    </item>
+</menu>
