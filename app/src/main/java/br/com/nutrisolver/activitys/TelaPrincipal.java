@@ -1,6 +1,7 @@
 package br.com.nutrisolver.activitys;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -57,6 +58,8 @@ public class TelaPrincipal extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
+    private static final int CADASTRAR_LOTE_REQUEST = 1001;
+
     //private boolean atualiza_lotes;
 
     private DrawerLayout mDrawerLayout;
@@ -68,6 +71,7 @@ public class TelaPrincipal extends AppCompatActivity {
         setContentView(R.layout.activity_tela_principal);
 
         progressBar = findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -114,7 +118,7 @@ public class TelaPrincipal extends AppCompatActivity {
 
         currentUser = mAuth.getCurrentUser();
 
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
 
         verifica_login_fazenda();
 
@@ -166,12 +170,12 @@ public class TelaPrincipal extends AppCompatActivity {
     private void atualiza_interface(){
 
         listaLotes = (ListView) findViewById(R.id.lista_lotes);
-        lotes = new ArrayList<>();
 
         db.collection("lotes").whereEqualTo("fazenda_id", fazenda_corrente_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    lotes = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         lotes.add(document.toObject(Lote.class));
                         //Log.d(TAG, document.getId() + " => " + document.getData());
@@ -229,6 +233,16 @@ public class TelaPrincipal extends AppCompatActivity {
     }
 
     public void cadastrar_lote(View view) {
-        startActivity(new Intent(this, CadastrarLote.class));
+        startActivityForResult(new Intent(this, CadastrarLote.class), CADASTRAR_LOTE_REQUEST);
+        //startActivity(new Intent(this, CadastrarLote.class));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CADASTRAR_LOTE_REQUEST && resultCode == 1){ // foi cadastrado um lote novo
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 }

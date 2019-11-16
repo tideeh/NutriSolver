@@ -24,14 +24,7 @@
 
                 <TextView
                     style="@style/texto_cabecalho"
-                    android:text="Lotes" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="7"
-                    android:orientation="vertical">
+                    android:text="@string/lotes" />
 
                     <ListView
                         android:id="@+id/lista_lotes"
@@ -39,21 +32,22 @@
                         android:layout_height="match_parent">
                     </ListView>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <Button
-                        style="@style/botao_confirmar"
-                        android:onClick="cadastrar_lote"
-                        android:text="@string/cadastrar_lote" />
-                </LinearLayout>
-
             </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_cadastrar_lote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            app:fabSize="auto"
+            app:fabCustomSize="60dp"
+            app:maxImageSize="30dp"
+            android:onClick="cadastrar_lote"
+            app:srcCompat="@drawable/baseline_add_black_48"
+            android:backgroundTint="@color/colorPrimary"
+            app:rippleColor="@color/colorPrimaryDark"
+            tools:targetApi="lollipop" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

@@ -116,6 +116,9 @@ public class CadastrarLote extends AppCompatActivity {
         //it.putExtra("atualiza_lotes", true);
         //startActivity(it);
 
+        Intent it = new Intent();
+        setResult(1, it);
+
         finish();
     }
 
