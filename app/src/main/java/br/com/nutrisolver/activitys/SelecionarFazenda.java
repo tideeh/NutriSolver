@@ -66,12 +66,12 @@ public class SelecionarFazenda extends AppCompatActivity {
         }
 
         listaFazendas = (ListView) findViewById(R.id.lista_fazendas);
-        fazendas = new ArrayList<>();
 
         db.collection("fazendas").whereEqualTo("dono_uid", currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    fazendas = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         fazendas.add(document.toObject(Fazenda.class));
                         //Log.d(TAG, document.getId() + " => " + document.getData());
@@ -100,8 +100,7 @@ public class SelecionarFazenda extends AppCompatActivity {
 
     }
 
-    public void cadastrarFazenda(View view) {
+    public void cadastrar_fazenda(View view) {
         startActivity(new Intent(this, CadastrarFazenda.class));
-        finish();
     }
 }

@@ -56,6 +56,7 @@ public class CadastrarFazenda extends AppCompatActivity {
         // adiciona a barra de tarefas na tela
         Toolbar my_toolbar = findViewById(R.id.my_toolbar_main);
         setSupportActionBar(my_toolbar);
+        // adiciona a seta de voltar na barra de tarefas
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -110,7 +111,7 @@ public class CadastrarFazenda extends AppCompatActivity {
     }
 
     private void finaliza_cadastro(){
-        ToastUtil.show(getApplicationContext(), "Fazenda cadastrada com sucesso 11!", Toast.LENGTH_SHORT);
+        ToastUtil.show(getApplicationContext(), "Fazenda cadastrada com sucesso!", Toast.LENGTH_SHORT);
         progressBar.setVisibility(View.GONE);
         startActivity(new Intent(getApplicationContext(), TelaPrincipal.class));
         finish();

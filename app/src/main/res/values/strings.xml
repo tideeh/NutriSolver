@@ -24,4 +24,7 @@
     <string name="fazer_login_com_facebook">Fazer login com Facebook</string>
     <string name="sair">Sair</string>
     <string name="lotes">Lotes</string>
+    <string name="pesquisar">Pesquisar</string>
+    <string name="atualizar">Atualizar</string>
+    <string name="minha_conta">Minha Conta</string>
 </resources>

@@ -35,4 +35,19 @@
         <item name="android:textSize">20sp</item>
         <item name="android:padding">8dp</item>
     </style>
+
+    <style name="floating_button_add">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="fabSize">auto</item>
+        <item name="android:tint">@android:color/white</item>
+        <item name="fabCustomSize">60dp</item>
+        <item name="maxImageSize">30dp</item>
+        <item name="srcCompat">@drawable/baseline_add_black_48</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="rippleColor">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

@@ -35,19 +35,9 @@
             </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/floating_button_add"
             android:id="@+id/fab_cadastrar_lote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="20dp"
-            app:fabSize="auto"
-            app:fabCustomSize="60dp"
-            app:maxImageSize="30dp"
-            android:onClick="cadastrar_lote"
-            app:srcCompat="@drawable/baseline_add_black_48"
-            android:backgroundTint="@color/colorPrimary"
-            app:rippleColor="@color/colorPrimaryDark"
-            tools:targetApi="lollipop" />
+            android:onClick="cadastrar_lote" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

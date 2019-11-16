@@ -49,10 +49,12 @@ public class CadastrarLote extends AppCompatActivity {
         input_nome_lote = findViewById(R.id.cadastrar_nome_do_lote);
         progressBar = findViewById(R.id.progress_bar);
 
-        Toolbar toolbar = findViewById(R.id.my_toolbar_main);
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
+        // adiciona a barra de tarefas na tela
+        Toolbar my_toolbar = findViewById(R.id.my_toolbar_main);
+        setSupportActionBar(my_toolbar);
+        // adiciona a seta de voltar na barra de tarefas
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -68,6 +70,11 @@ public class CadastrarLote extends AppCompatActivity {
         }
 
         fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1"); // getting String
+
+        String faz_nome = getIntent().getStringExtra("faz_corrente_nome");
+        if(faz_nome == null)
+            faz_nome = " ";
+        getSupportActionBar().setTitle("Fazenda: "+faz_nome);
     }
 
     @Override
