@@ -1,13 +1,24 @@
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:color="@color/colorAccentDark"
-    tools:targetApi="lollipop">
-    <item android:id="@android:id/mask">
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorAccentDark" />
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorAccentDark" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorAccentDark" />
+        </shape>
+    </item>
+
+    <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/colorAccent" />
         </shape>
     </item>
-    <item
-        android:id="@android:id/background"
-        android:drawable="@color/colorAccent" />
-</ripple>
+</selector>
