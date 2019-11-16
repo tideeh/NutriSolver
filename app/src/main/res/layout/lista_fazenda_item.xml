@@ -27,6 +27,7 @@
             android:typeface="normal" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/lista_lote_click"
             android:layout_width="0dp"
             android:layout_height="match_parent"

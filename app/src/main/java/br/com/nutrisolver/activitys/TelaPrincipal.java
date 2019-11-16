@@ -303,6 +303,11 @@ public class TelaPrincipal extends AppCompatActivity {
                 logout();
                 return true;
 
+            case R.id.mi_refresh:
+                progressBar.setVisibility(View.VISIBLE);
+                atualiza_interface();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
