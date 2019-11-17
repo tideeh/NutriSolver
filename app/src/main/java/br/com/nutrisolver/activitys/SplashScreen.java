@@ -68,7 +68,7 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 verificaLogin();
             }
-        }, 750);
+        }, 500);
     }
 
     private void verificaLogin() {

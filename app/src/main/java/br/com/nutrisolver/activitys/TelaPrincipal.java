@@ -79,9 +79,10 @@ public class TelaPrincipal extends AppCompatActivity {
 
         verifica_fazenda_corrente();
 
-        atualiza_lista_de_lotes();
+        //atualiza_lista_de_lotes();
 
         configura_toolbar_com_nav_drawer();
+        progressBar.setVisibility(View.VISIBLE);
         configura_spinner_fazendas();
     }
 
@@ -305,6 +306,8 @@ public class TelaPrincipal extends AppCompatActivity {
         if (requestCode == CADASTRAR_LOTE_REQUEST && resultCode == 1) { // foi cadastrado um lote novo, adiciona ele na lista de lotes e atualizar o adapter da listView
             Lote l = (Lote) data.getSerializableExtra("lote_cadastrado");
             Log.i("MY_ACTIVITY_RESULT", "lote nome: " + l.getNome());
+            if(lotes == null)
+                lotes = new ArrayList<>();
             lotes.add(l);
             adapterLote = new AdapterLote(lotes, TelaPrincipal.this);
             listView_lotes.setAdapter(adapterLote);
