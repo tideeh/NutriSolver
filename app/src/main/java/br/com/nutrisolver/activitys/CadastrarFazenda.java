@@ -15,19 +15,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Fazenda;
+import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.ToastUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class CadastrarFazenda extends AppCompatActivity {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
-    private FirebaseFirestore db;
+    //private FirebaseFirestore db;
     private EditText input_nome_fazenda;
     private ProgressBar progressBar;
     private SharedPreferences sharedpreferences;
@@ -39,7 +38,6 @@ public class CadastrarFazenda extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_fazenda);
 
-        db = FirebaseFirestore.getInstance();
         input_nome_fazenda = findViewById(R.id.cadastrar_nome_da_fazenda);
         progressBar = findViewById(R.id.progress_bar);
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
@@ -77,7 +75,8 @@ public class CadastrarFazenda extends AppCompatActivity {
 
         fazenda = new Fazenda(nome_fazenda, UserUtil.getCurrentUser().getUid());
 
-        db.collection("fazendas").document(fazenda.getId()).set(fazenda);
+        DataBaseUtil.getInstance().insertDocument("fazendas", fazenda.getId(), fazenda);
+        //db.collection("fazendas").document(fazenda.getId()).set(fazenda);
 
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString("fazenda_corrente_id", fazenda.getId());
@@ -90,8 +89,6 @@ public class CadastrarFazenda extends AppCompatActivity {
                 finaliza_cadastro();
             }
         }, 800);
-
-
     }
 
     private void finaliza_cadastro() {

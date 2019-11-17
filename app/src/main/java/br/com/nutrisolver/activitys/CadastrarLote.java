@@ -21,12 +21,13 @@ import java.util.Objects;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Lote;
+import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.ToastUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class CadastrarLote extends AppCompatActivity {
     private SharedPreferences sharedpreferences;
-    private FirebaseFirestore db;
+    //private FirebaseFirestore db;
     private EditText input_nome_lote;
     private ProgressBar progressBar;
     private Lote lote;
@@ -37,7 +38,7 @@ public class CadastrarLote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_lote);
 
-        db = FirebaseFirestore.getInstance();
+        //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         input_nome_lote = findViewById(R.id.cadastrar_nome_do_lote);
         progressBar = findViewById(R.id.progress_bar);
@@ -94,7 +95,8 @@ public class CadastrarLote extends AppCompatActivity {
 
         lote = new Lote(nome_lote, fazenda_corrente_id);
 
-        db.collection("lotes").document(lote.getId()).set(lote);
+        //db.collection("lotes").document(lote.getId()).set(lote);
+        DataBaseUtil.getInstance().insertDocument("lotes", lote.getId(), lote);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

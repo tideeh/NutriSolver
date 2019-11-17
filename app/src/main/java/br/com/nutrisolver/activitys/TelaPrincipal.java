@@ -22,14 +22,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -41,11 +36,12 @@ import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.AdapterLote;
+import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class TelaPrincipal extends AppCompatActivity {
     private static final int CADASTRAR_LOTE_REQUEST = 1001;
-    private FirebaseFirestore db;
+    //private FirebaseFirestore db;
     private SharedPreferences sharedpreferences;
     private String fazenda_corrente_id;
     private String fazenda_corrente_nome;
@@ -70,7 +66,7 @@ public class TelaPrincipal extends AppCompatActivity {
 
         Log.i("MY_ACTIVITY_RESULT", "1");
 
-        db = FirebaseFirestore.getInstance();
+        //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         progressBar = findViewById(R.id.progress_bar);
         listView_lotes = (ListView) findViewById(R.id.lista_lotes);
@@ -92,23 +88,26 @@ public class TelaPrincipal extends AppCompatActivity {
     private void atualiza_lista_de_lotes() {
         progressBar.setVisibility(View.VISIBLE);
 
-        db.collection("lotes").whereEqualTo("fazenda_id", fazenda_corrente_id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    lotes = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        lotes.add(document.toObject(Lote.class));
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("lotes", "fazenda_id", fazenda_corrente_id)
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            lotes = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                lotes.add(document.toObject(Lote.class));
+                            }
+                            adapterLote = new AdapterLote(lotes, TelaPrincipal.this);
+                            listView_lotes.setAdapter(adapterLote);
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            Log.i("MY_FIRESTORE", "Error getting documents: ", task.getException());
+                            progressBar.setVisibility(View.GONE);
+                        }
                     }
-                    adapterLote = new AdapterLote(lotes, TelaPrincipal.this);
-                    listView_lotes.setAdapter(adapterLote);
-                    progressBar.setVisibility(View.GONE);
-                } else {
-                    Log.i("MY_FIRESTORE", "Error getting documents: ", task.getException());
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+                });
+
+        //db.collection("lotes").whereEqualTo("fazenda_id", fazenda_corrente_id).get()
 
         listView_lotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -124,33 +123,25 @@ public class TelaPrincipal extends AppCompatActivity {
     private void verifica_fazenda_corrente() {
         fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
 
-        DocumentReference docRef = db.collection("fazendas").document(fazenda_corrente_id);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.toObject(Fazenda.class) != null) {
-                    if (documentSnapshot.toObject(Fazenda.class).getDono_uid().equals(UserUtil.getCurrentUser().getUid())) { // ja possui fazenda corrente e eh dele
-                        fazenda_corrente_nome = documentSnapshot.toObject(Fazenda.class).getNome();
-                        getSupportActionBar().setTitle("Fazenda: " + fazenda_corrente_nome);
-                        return;
+        //DocumentReference docRef = db.collection("fazendas").document(fazenda_corrente_id);
+        DataBaseUtil.getInstance().getDocument("fazendas", fazenda_corrente_id)
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.toObject(Fazenda.class) != null) {
+                                if (document.toObject(Fazenda.class).getDono_uid().equals(UserUtil.getCurrentUser().getUid())) { // ja possui fazenda corrente e eh dele
+                                    fazenda_corrente_nome = document.toObject(Fazenda.class).getNome();
+                                    getSupportActionBar().setTitle("Fazenda: " + fazenda_corrente_nome);
+                                    return;
+                                }
+                            }
+                        }
+                        startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
+                        finish();
                     }
-                }
-                startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
-                finish();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
-                finish();
-            }
-        }).addOnCanceledListener(new OnCanceledListener() {
-            @Override
-            public void onCanceled() {
-                startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
-                finish();
-            }
-        });
+                });
     }
 
     private void configura_toolbar_com_nav_drawer() {
@@ -219,7 +210,8 @@ public class TelaPrincipal extends AppCompatActivity {
 
     private void configura_spinner_fazendas() {
 
-        db.collection("fazendas").whereEqualTo("dono_uid", UserUtil.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //db.collection("fazendas").whereEqualTo("dono_uid", UserUtil.getCurrentUser().getUid()).get()
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("fazendas", "dono_uid", UserUtil.getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

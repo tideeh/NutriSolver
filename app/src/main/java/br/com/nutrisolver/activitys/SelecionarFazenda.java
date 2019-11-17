@@ -28,10 +28,11 @@ import java.util.List;
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.tools.AdapterFazenda;
+import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class SelecionarFazenda extends AppCompatActivity {
-    private FirebaseFirestore db;
+    //private FirebaseFirestore db;
     private SharedPreferences sharedpreferences;
     private List<Fazenda> fazendas;
     private ListView listView_Fazendas;
@@ -46,7 +47,7 @@ public class SelecionarFazenda extends AppCompatActivity {
         listView_Fazendas = (ListView) findViewById(R.id.lista_fazendas);
         progressBar = findViewById(R.id.progress_bar);
 
-        db = FirebaseFirestore.getInstance();
+        //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
         if (!UserUtil.isLogged()) {
@@ -67,7 +68,9 @@ public class SelecionarFazenda extends AppCompatActivity {
     private void atualiza_lista_de_fazendas() {
         progressBar.setVisibility(View.VISIBLE);
 
-        db.collection("fazendas").whereEqualTo("dono_uid", UserUtil.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //db.collection("fazendas").whereEqualTo("dono_uid", UserUtil.getCurrentUser().getUid()).get()
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("fazendas", "dono_uid", UserUtil.getCurrentUser().getUid())
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -78,8 +81,9 @@ public class SelecionarFazenda extends AppCompatActivity {
                     adapterFazenda = new AdapterFazenda(fazendas, SelecionarFazenda.this);
                     listView_Fazendas.setAdapter(adapterFazenda);
                     progressBar.setVisibility(View.GONE);
+                    Log.i("MY_FIRESTORE", "Sucesso atualiza lista de fazendas");
                 } else {
-                    Log.d("MY_FIRESTORE", "Error getting documents: ", task.getException());
+                    Log.i("MY_FIRESTORE", "Error getting documents: "+task.getException());
                     progressBar.setVisibility(View.GONE);
                 }
             }

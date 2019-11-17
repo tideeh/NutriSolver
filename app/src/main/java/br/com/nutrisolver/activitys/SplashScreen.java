@@ -13,20 +13,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Fazenda;
+import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class SplashScreen extends AppCompatActivity {
     private SharedPreferences sharedpreferences;
     private String fazenda_corrente_id;
-    private FirebaseFirestore db;
+    //private FirebaseFirestore db;
     private Fazenda fazenda;
 
     private ProgressBar progressBar;
@@ -56,7 +59,7 @@ public class SplashScreen extends AppCompatActivity {
         }
         */
 
-        db = FirebaseFirestore.getInstance();
+        //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
         Handler handler = new Handler();
@@ -65,7 +68,7 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 verificaLogin();
             }
-        }, 1000);
+        }, 750);
     }
 
     private void verificaLogin() {
@@ -81,45 +84,32 @@ public class SplashScreen extends AppCompatActivity {
             // ja esta logado, vai para tela inicial ou para tela de selecionar fazendas
             fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1"); // getting String
 
-            DocumentReference docRef = db.collection("fazendas").document(fazenda_corrente_id);
-            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    Log.i("VERIFICA_FAZ_CORRENTE", "1");
-                    fazenda = documentSnapshot.toObject(Fazenda.class);
-                    if (fazenda != null) {
-                        Log.i("VERIFICA_FAZ_CORRENTE", "2");
-                        if (fazenda.getDono_uid().equals(UserUtil.getCurrentUser().getUid())) { // ja possui fazenda corrente e eh dele
+            //DocumentReference docRef = db.collection("fazendas").document(fazenda_corrente_id);
+            DataBaseUtil.getInstance().getDocument("fazendas", fazenda_corrente_id)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            Log.i("VERIFICA_FAZ_CORRENTE", "1");
+                            if (task.isSuccessful()) {
+                                fazenda = task.getResult().toObject(Fazenda.class);
+                                if (fazenda != null) {
+                                    Log.i("VERIFICA_FAZ_CORRENTE", "2");
+                                    if (fazenda.getDono_uid().equals(UserUtil.getCurrentUser().getUid())) { // ja possui fazenda corrente e eh dele
+                                        progressBar.setVisibility(View.GONE);
+                                        Log.i("VERIFICA_FAZ_CORRENTE", "3");
+                                        startActivity(new Intent(getApplicationContext(), TelaPrincipal.class));
+                                        finish();
+                                        return;
+                                    }
+                                }
+                            }
+                            Log.i("VERIFICA_FAZ_CORRENTE", "4");
                             progressBar.setVisibility(View.GONE);
-                            Log.i("VERIFICA_FAZ_CORRENTE", "3");
-                            startActivity(new Intent(getApplicationContext(), TelaPrincipal.class));
-                            finish();
-                            return;
-                        }
-                    }
-                    Log.i("VERIFICA_FAZ_CORRENTE", "4");
-                    progressBar.setVisibility(View.GONE);
 
-                    startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
-                    finish();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressBar.setVisibility(View.GONE);
-                    Log.i("VERIFICA_FAZ_CORRENTE", "5");
-                    startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
-                    finish();
-                }
-            }).addOnCanceledListener(new OnCanceledListener() {
-                @Override
-                public void onCanceled() {
-                    progressBar.setVisibility(View.GONE);
-                    Log.i("VERIFICA_FAZ_CORRENTE", "6");
-                    startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
-                    finish();
-                }
-            });
+                            startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
+                            finish();
+                        }
+                    });
         }
     }
 
