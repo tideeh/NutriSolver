@@ -1,16 +1,16 @@
 package br.com.nutrisolver.objects;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
-public class Lote {
+public class Lote implements Serializable {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
     private String id;
     private String nome;
-    //private List<Dieta> dietas;
     private String data_criacao;
     private String fazenda_id;
 
@@ -46,7 +46,6 @@ public class Lote {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
 
     public String getData_criacao() {
         return data_criacao;

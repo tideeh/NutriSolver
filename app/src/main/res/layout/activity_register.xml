@@ -1,106 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activitys.Register">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_below="@id/img_logo"
+            android:layout_weight="1"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/img_logo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/logo_margin_top"
-                android:src="@drawable/logo_nutrisolver_reduzido"
-                android:contentDescription="imagem logo" />
-
-            <LinearLayout
-                android:fitsSystemWindows="true"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/img_logo"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginTop="80dp">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="40dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/register_input_email"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/img_logo"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/logo_margin_top"
+                        android:contentDescription="imagem logo"
+                        android:src="@drawable/logo_nutrisolver_reduzido" />
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:autofillHints="username"
-                        tools:targetApi="o" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginEnd="20dp"
+                        android:hint="@string/email">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/senha"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="15dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/register_input_senha"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/register_input_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="username"
+                            android:inputType="textEmailAddress"
+                            tools:targetApi="o" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:autofillHints="password"
-                        tools:targetApi="o" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="20dp"
+                        android:hint="@string/senha">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/repita_a_senha"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="15dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/register_input_senha_repetir"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/register_input_senha"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="password"
+                            android:inputType="textPassword"
+                            tools:targetApi="o" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:autofillHints="password"
-                        tools:targetApi="o" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="20dp"
+                        android:hint="@string/repita_a_senha">
 
-                <Button
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_width="match_parent"
-                    style="@style/botao_confirmar"
-                    android:id="@+id/btn_registrar"
-                    android:text="@string/Registrar"
-                    android:onClick="registrar"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/register_input_senha_repetir"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="password"
+                            android:inputType="textPassword"
+                            tools:targetApi="o" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
 
-            </LinearLayout>
+        <LinearLayout
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        </RelativeLayout>
+            <Button
+                android:id="@+id/btn_registrar"
+                style="@style/botao_confirmar"
+                android:layout_width="match_parent"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:onClick="registrar"
+                android:text="@string/Registrar" />
+        </LinearLayout>
 
-    </ScrollView>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/register_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>

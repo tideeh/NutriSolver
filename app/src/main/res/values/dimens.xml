@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="logo_margin_top">50dp</dimen>
+    <dimen name="logo_margin_top">20dp</dimen>
 </resources>

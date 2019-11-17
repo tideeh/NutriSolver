@@ -12,36 +12,24 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import br.com.nutrisolver.R;
-import br.com.nutrisolver.objects.*;
+import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.tools.ToastUtil;
+import br.com.nutrisolver.tools.UserUtil;
 
 public class CadastrarFazenda extends AppCompatActivity {
-    private FirebaseAuth mAuth;
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
     private FirebaseFirestore db;
-    private FirebaseUser currentUser;
     private EditText input_nome_fazenda;
     private ProgressBar progressBar;
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
     private SharedPreferences sharedpreferences;
     private Fazenda fazenda;
 
@@ -51,38 +39,35 @@ public class CadastrarFazenda extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_fazenda);
 
-        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        input_nome_fazenda = findViewById(R.id.cadastrar_nome_da_fazenda);
+        progressBar = findViewById(R.id.progress_bar);
+        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
+        configura_toolbar();
+    }
+
+    private void configura_toolbar() {
         // adiciona a barra de tarefas na tela
         Toolbar my_toolbar = findViewById(R.id.my_toolbar_main);
         setSupportActionBar(my_toolbar);
         // adiciona a seta de voltar na barra de tarefas
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        db = FirebaseFirestore.getInstance();
-
-        input_nome_fazenda = findViewById(R.id.cadastrar_nome_da_fazenda);
-        progressBar = findViewById(R.id.progress_bar);
-
-        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        currentUser = mAuth.getCurrentUser();
-
-        if(currentUser == null){
-            // nao esta logado!!
+        if (!UserUtil.isLogged()) {
             startActivity(new Intent(this, Login.class));
             finish();
         }
     }
 
     public void cadastrar_fazenda(View view) {
-        if(!validaDados()){
+        if (!validaDados()) {
             return;
         }
 
@@ -90,7 +75,7 @@ public class CadastrarFazenda extends AppCompatActivity {
 
         String nome_fazenda = input_nome_fazenda.getText().toString();
 
-        fazenda = new Fazenda(nome_fazenda, currentUser.getUid());
+        fazenda = new Fazenda(nome_fazenda, UserUtil.getCurrentUser().getUid());
 
         db.collection("fazendas").document(fazenda.getId()).set(fazenda);
 
@@ -107,10 +92,9 @@ public class CadastrarFazenda extends AppCompatActivity {
         }, 800);
 
 
-
     }
 
-    private void finaliza_cadastro(){
+    private void finaliza_cadastro() {
         ToastUtil.show(getApplicationContext(), "Fazenda cadastrada com sucesso!", Toast.LENGTH_SHORT);
         progressBar.setVisibility(View.GONE);
         startActivity(new Intent(getApplicationContext(), TelaPrincipal.class));

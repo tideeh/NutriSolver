@@ -2,7 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:visible="false"
         android:id="@+id/mi_search"
         android:icon="@drawable/outline_search_black_48dp"
         android:title="@string/pesquisar"
@@ -11,6 +10,7 @@
     </item>
 
     <item
+        android:visible="false"
         android:id="@+id/mi_refresh"
         android:icon="@drawable/outline_refresh_black_48dp"
         android:title="@string/atualizar"

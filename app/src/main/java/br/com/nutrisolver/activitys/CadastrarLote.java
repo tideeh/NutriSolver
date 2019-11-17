@@ -1,8 +1,5 @@
 package br.com.nutrisolver.activitys;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,22 +12,21 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 import br.com.nutrisolver.R;
-import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.ToastUtil;
+import br.com.nutrisolver.tools.UserUtil;
 
 public class CadastrarLote extends AppCompatActivity {
     private SharedPreferences sharedpreferences;
-    private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseUser currentUser;
     private EditText input_nome_lote;
     private ProgressBar progressBar;
     private Lote lote;
@@ -41,14 +37,15 @@ public class CadastrarLote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_lote);
 
-        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-
         input_nome_lote = findViewById(R.id.cadastrar_nome_do_lote);
         progressBar = findViewById(R.id.progress_bar);
 
+        configura_toolbar();
+    }
+
+    private void configura_toolbar() {
         // adiciona a barra de tarefas na tela
         Toolbar my_toolbar = findViewById(R.id.my_toolbar_main);
         setSupportActionBar(my_toolbar);
@@ -61,10 +58,7 @@ public class CadastrarLote extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        currentUser = mAuth.getCurrentUser();
-
-        if(currentUser == null){
-            // nao esta logado!!
+        if (!UserUtil.isLogged()) {
             startActivity(new Intent(this, Login.class));
             finish();
         }
@@ -72,9 +66,9 @@ public class CadastrarLote extends AppCompatActivity {
         fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1"); // getting String
 
         String faz_nome = getIntent().getStringExtra("faz_corrente_nome");
-        if(faz_nome == null)
+        if (faz_nome == null)
             faz_nome = " ";
-        getSupportActionBar().setTitle("Fazenda: "+faz_nome);
+        getSupportActionBar().setTitle("Fazenda: " + faz_nome);
     }
 
     @Override
@@ -90,7 +84,7 @@ public class CadastrarLote extends AppCompatActivity {
     }
 
     public void cadastrar_lote(View view) {
-        if(!validaDados()){
+        if (!validaDados()) {
             return;
         }
 
@@ -111,19 +105,14 @@ public class CadastrarLote extends AppCompatActivity {
         }, 800);
 
 
-
     }
 
-    private void finaliza_cadastro(){
-        ToastUtil.show(getApplicationContext(), "Lote cadastrado com sucesso 11!", Toast.LENGTH_SHORT);
+    private void finaliza_cadastro() {
+        ToastUtil.show(getApplicationContext(), "Lote cadastrado com sucesso!", Toast.LENGTH_SHORT);
         progressBar.setVisibility(View.GONE);
 
-        //Intent it = new Intent(this, TelaPrincipal.class);
-        //it.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        //it.putExtra("atualiza_lotes", true);
-        //startActivity(it);
-
         Intent it = new Intent();
+        it.putExtra("lote_cadastrado", lote);
         setResult(1, it);
 
         finish();
