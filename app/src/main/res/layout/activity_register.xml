@@ -5,21 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".activitys.Register">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@id/img_logo"
-            android:layout_weight="1"
-            android:fitsSystemWindows="true"
-            android:orientation="vertical">
 
             <ScrollView
+                android:fillViewport="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -87,28 +75,26 @@
                             android:inputType="textPassword"
                             tools:targetApi="o" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="bottom">
+                        <Button
+                            android:id="@+id/btn_registrar"
+                            style="@style/botao_confirmar"
+                            android:layout_width="match_parent"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginEnd="50dp"
+                            android:onClick="registrar"
+                            android:text="@string/Registrar" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </ScrollView>
-        </LinearLayout>
 
-        <LinearLayout
-            android:background="@android:color/transparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btn_registrar"
-                style="@style/botao_confirmar"
-                android:layout_width="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginEnd="50dp"
-                android:onClick="registrar"
-                android:text="@string/Registrar" />
-        </LinearLayout>
-
-    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/register_progress_bar"

@@ -5,25 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".activitys.Login">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@id/img_logo"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <ImageView
@@ -35,19 +24,13 @@
                         android:contentDescription="imagem logo"
                         android:src="@drawable/logo_nutrisolver_reduzido" />
 
-                    <LinearLayout
+                    <com.google.android.gms.common.SignInButton
+                        android:id="@+id/btn_login_com_google"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="30dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <com.google.android.gms.common.SignInButton
-                            android:id="@+id/btn_login_com_google"
-                            android:layout_width="match_parent"
-                            android:layout_height="55dp"
-                            android:layout_marginStart="50dp"
-                            android:layout_marginEnd="50dp" />
+                        android:layout_height="55dp"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginEnd="50dp" />
 
                         <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/btn_login_com_facebook"
@@ -62,25 +45,26 @@
                             facebook:com_facebook_logout_text="@string/sair" />
 
                         <TextView
+                            android:layout_gravity="center_horizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="25dp"
                             android:text="@string/ou" />
 
-                        <com.google.android.material.textfield.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginEnd="20dp"
+                        android:hint="@string/email">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/login_input_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginTop="40dp"
-                            android:layout_marginEnd="20dp"
-                            android:hint="@string/email">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/login_input_email"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="textEmailAddress" />
-                        </com.google.android.material.textfield.TextInputLayout>
+                            android:inputType="textEmailAddress" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
@@ -97,52 +81,47 @@
                                 android:inputType="textPassword" />
                         </com.google.android.material.textfield.TextInputLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginEnd="50dp"
+                        android:background="@android:color/transparent"
+                        android:gravity="bottom">
+
+                        <Button
+                            android:id="@+id/btn_login_com_senha"
+                            style="@style/botao_confirmar"
+                            android:layout_width="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/login" />
+
+                        <TextView
+                            android:id="@+id/btn_registrar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/btn_login_com_senha"
+                            android:layout_alignStart="@id/btn_login_com_senha"
+                            android:layout_marginBottom="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/registrar" />
+
+                        <TextView
+                            android:id="@+id/btn_recuperar_senha"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/btn_login_com_senha"
+                            android:layout_alignEnd="@id/btn_login_com_senha"
+                            android:layout_marginBottom="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/recuperar_senha" />
+
+                    </RelativeLayout>
+
                     </LinearLayout>
-
-                </LinearLayout>
-
             </ScrollView>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:background="@android:color/transparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginBottom="20dp">
-
-            <Button
-                android:id="@+id/btn_login_com_senha"
-                style="@style/botao_confirmar"
-                android:layout_width="match_parent"
-                android:text="@string/login"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:id="@+id/btn_registrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btn_login_com_senha"
-                android:layout_alignStart="@id/btn_login_com_senha"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/registrar" />
-
-            <TextView
-                android:id="@+id/btn_recuperar_senha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btn_login_com_senha"
-                android:layout_alignEnd="@id/btn_login_com_senha"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/recuperar_senha" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/login_progress_bar"

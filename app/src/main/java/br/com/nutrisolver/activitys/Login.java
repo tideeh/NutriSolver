@@ -74,11 +74,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onCancel() {
                 //Toast.makeText(getApplicationContext(), "Facebook onCancel", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onError(FacebookException error) {
                 ToastUtil.show(getApplicationContext(), "Facebook onError: " + error.toString(), Toast.LENGTH_SHORT);
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -160,6 +162,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             } catch (ApiException e) {
                 // Google Sign In failed
                 ToastUtil.show(getApplicationContext(), "Autenticação falhou: " + e.toString(), Toast.LENGTH_SHORT);
+                progressBar.setVisibility(View.GONE);
             }
         }
     }
