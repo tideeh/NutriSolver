@@ -40,6 +40,10 @@ public class AdapterLote extends BaseAdapter {
         return lotes.get(pos).getId();
     }
 
+    public String getItemName(int pos){
+        return lotes.get(pos).getNome();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = act.getLayoutInflater().inflate(R.layout.lista_lote_item, parent, false);

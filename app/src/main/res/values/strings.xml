@@ -30,4 +30,10 @@
     <string name="imagem_logo">imagem logo</string>
     <string name="ola_selecione_uma_fazenda">Olá, selecione uma Fazenda!</string>
     <string name="ola_faca_o_cadastro_da_sua_fazenda">Olá, faça o cadastro da sua fazenda!</string>
+    <string name="editar_dieta">Editar Dieta</string>
+    <string name="executar_teste">Executar Teste</string>
+    <string name="dieta_atual">Dieta Atual</string>
+    <string name="selecione_os_ingredientes_da_dieta">Selecione os ingredientes da Dieta</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="salvar_dieta">Salvar Dieta</string>
 </resources>

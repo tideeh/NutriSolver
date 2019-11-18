@@ -114,9 +114,10 @@ public class TelaPrincipal extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //Intent it = new Intent(view.getContext(), VisualizaLote.class);
-                //it.putExtra("lote_id", adapter.getItemIdString(position));
-                //startActivity(it);
+                Intent it = new Intent(view.getContext(), VisualizaLote.class);
+                it.putExtra("lote_id", adapterLote.getItemIdString(position));
+                it.putExtra("lote_nome", adapterLote.getItemName(position));
+                startActivity(it);
             }
         });
     }
