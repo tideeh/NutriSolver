@@ -13,19 +13,27 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
+import br.com.nutrisolver.objects.PossiveisIngredientes;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.ToastUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class EditarDieta extends AppCompatActivity {
-    public static String[] possiveis_ingredientes = new String[]{"Milho", "Farelo de Soja", "Feno"};
+    public List<String> possiveis_ingredientes = new ArrayList<>();// = new String[] { "Milho", "Farelo de Soja", "Feno" };
     Dieta dieta;
     private String lote_id;
     private String lote_nome;
@@ -38,7 +46,7 @@ public class EditarDieta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_dieta);
 
-        listView_editar_ingredientes = (ListView) findViewById(R.id.listView_editar_ingredientes);
+        listView_editar_ingredientes = findViewById(R.id.listView_editar_ingredientes);
         progressBar = findViewById(R.id.progress_bar);
 
         Intent it = getIntent();
@@ -56,9 +64,43 @@ public class EditarDieta extends AppCompatActivity {
     }
 
     private void atualiza_lista_ingredientes() {
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, possiveis_ingredientes);
-        listView_editar_ingredientes.setAdapter(itemsAdapter);
-        listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        /* usado para a criacao do primeiro documento dos possiveis ingredientes
+        possiveis_ingredientes.add("Milho");
+        possiveis_ingredientes.add("Farelo de Soja");
+        possiveis_ingredientes.add("Feno");
+
+        PossiveisIngredientes possiveisIngredientes = new PossiveisIngredientes();
+        possiveisIngredientes.setIngredientes(possiveis_ingredientes);
+        DataBaseUtil.getInstance().insertDocument("possiveis_ingredientes", "possiveis_ingredientes", possiveisIngredientes);
+
+         */
+
+
+        progressBar.setVisibility(View.VISIBLE);
+        // recebe os possiveis ingredientes
+        DataBaseUtil.getInstance().getDocument("possiveis_ingredientes", "possiveis_ingredientes")
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                PossiveisIngredientes possiveisIngredientes = document.toObject(PossiveisIngredientes.class);
+
+                                if (possiveisIngredientes != null) {
+                                    Log.i("MY_FIRESTORE", " " + possiveisIngredientes.getIngredientes().toString());
+
+                                    possiveis_ingredientes = possiveisIngredientes.getIngredientes();
+                                }
+
+                                ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(EditarDieta.this, android.R.layout.simple_list_item_activated_1, possiveis_ingredientes);
+                                listView_editar_ingredientes.setAdapter(itemsAdapter);
+                                listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+                            }
+                        }
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override
@@ -110,7 +152,7 @@ public class EditarDieta extends AppCompatActivity {
 
         for (int i = 0; i < len; i++) {
             if (checked.get(i)) {
-                String item = possiveis_ingredientes[i];
+                String item = possiveis_ingredientes.get(i);
                 dieta.addIngrediente(item);
             }
         }
