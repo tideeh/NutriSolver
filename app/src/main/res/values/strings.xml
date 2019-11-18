@@ -27,4 +27,7 @@
     <string name="pesquisar">Pesquisar</string>
     <string name="atualizar">Atualizar</string>
     <string name="minha_conta">Minha Conta</string>
+    <string name="imagem_logo">imagem logo</string>
+    <string name="ola_selecione_uma_fazenda">Olá, selecione uma Fazenda!</string>
+    <string name="ola_faca_o_cadastro_da_sua_fazenda">Olá, faça o cadastro da sua fazenda!</string>
 </resources>

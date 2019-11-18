@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,26 +9,27 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <!-- barra de tarefas -->
-    <include
-        android:id="@+id/my_toolbar_main"
-        layout="@layout/barra_tarefas" />
+        <!-- barra de tarefas -->
+        <include
+            android:id="@+id/my_toolbar_main"
+            layout="@layout/barra_tarefas" />
 
-    <TextView
-        style="@style/texto_cabecalho"
-        android:text="Olá, selecione uma Fazenda!" />
+        <TextView
+            style="@style/texto_cabecalho"
+            android:text="@string/ola_selecione_uma_fazenda" />
 
         <ListView
             android:id="@+id/lista_fazendas"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
         </ListView>
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/floating_button_add"
         android:id="@+id/fab_cadastrar_fazenda"
+        style="@style/floating_button_add"
         android:onClick="cadastrar_fazenda" />
 
     <ProgressBar
@@ -38,6 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>

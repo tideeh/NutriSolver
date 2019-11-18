@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,49 +8,57 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <!-- barra de tarefas -->
-    <include
-        android:id="@+id/my_toolbar_main"
-        layout="@layout/barra_tarefas" />
+        <!-- barra de tarefas -->
+        <include
+            android:id="@+id/my_toolbar_main"
+            layout="@layout/barra_tarefas" />
 
-    <TextView
-        style="@style/texto_cabecalho"
-        android:text="Olá, faça o cadastro da sua fazenda!" />
+        <TextView
+            style="@style/texto_cabecalho"
+            android:text="@string/ola_faca_o_cadastro_da_sua_fazenda" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/nome_da_fazenda"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cadastrar_nome_da_fazenda"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="@string/nome_da_fazenda">
 
-    <LinearLayout
-        android:background="@android:color/transparent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cadastrar_nome_da_fazenda"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            style="@style/botao_confirmar"
-            android:onClick="cadastrar_fazenda"
-            android:text="@string/cadastrar_fazenda" />
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
+
+                    <Button
+                        style="@style/botao_confirmar"
+                        android:layout_gravity="center_horizontal"
+                        android:onClick="cadastrar_fazenda"
+                        android:text="@string/cadastrar_fazenda" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
@@ -60,6 +67,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>

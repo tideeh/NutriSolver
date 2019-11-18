@@ -21,7 +21,7 @@
                         android:layout_height="100dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/logo_margin_top"
-                        android:contentDescription="imagem logo"
+                        android:contentDescription="@string/imagem_logo"
                         android:src="@drawable/logo_nutrisolver_reduzido" />
 
                     <com.google.android.gms.common.SignInButton
