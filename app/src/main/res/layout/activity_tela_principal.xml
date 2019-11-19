@@ -38,11 +38,9 @@
             android:onClick="cadastrar_lote" />
 
         <ProgressBar
+            style="@style/my_progress_bar"
             android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </FrameLayout>
 
     <!-- barra lateral de navegacao -->

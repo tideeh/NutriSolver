@@ -27,7 +27,7 @@ public class Register extends AppCompatActivity {
         input_senha = findViewById(R.id.register_input_senha);
         input_senha_repetir = findViewById(R.id.register_input_senha_repetir);
 
-        progressBar = findViewById(R.id.register_progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
     }
 
     @Override

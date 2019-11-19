@@ -89,6 +89,7 @@ public class TelaPrincipal extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            adapterLote.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 adapterLote.addItem(document.toObject(Lote.class));
                                 Log.i("MY_FIRESTORE", "lotes do db: "+document.toObject(Lote.class).getNome());

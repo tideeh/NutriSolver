@@ -50,7 +50,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        progressBar = findViewById(R.id.login_progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
 
         // Configura Google Login
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

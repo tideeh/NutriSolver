@@ -73,4 +73,9 @@ public class AdapterLote extends BaseAdapter {
         this.list_items.add(item);
         this.notifyDataSetChanged();
     }
+
+    public void clear(){
+        list_items.clear();
+        this.notifyDataSetChanged();
+    }
 }

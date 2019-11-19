@@ -11,6 +11,7 @@ import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -34,6 +35,7 @@ import java.util.Set;
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
 import br.com.nutrisolver.objects.PossiveisIngredientes;
+import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.AdapterPossiveisIngredientes;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.ToastUtil;
@@ -56,7 +58,7 @@ public class EditarDieta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_dieta);
 
-        listView_editar_ingredientes = findViewById(R.id.listView_editar_ingredientes);
+
         progressBar = findViewById(R.id.progress_bar);
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
@@ -69,6 +71,8 @@ public class EditarDieta extends AppCompatActivity {
             startActivity(new Intent(this, TelaPrincipal.class));
             finish();
         }
+
+        configura_listView();
 
         atualiza_lista_ingredientes();
         configura_toolbar();
@@ -101,7 +105,7 @@ public class EditarDieta extends AppCompatActivity {
 
             AdapterPossiveisIngredientes itemsAdapter = new AdapterPossiveisIngredientes(this, possiveis_ingredientes);
             listView_editar_ingredientes.setAdapter(itemsAdapter);
-            listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
 
             progressBar.setVisibility(View.GONE);
         }
@@ -133,7 +137,6 @@ public class EditarDieta extends AppCompatActivity {
                             }
                             AdapterPossiveisIngredientes itemsAdapter = new AdapterPossiveisIngredientes(EditarDieta.this, possiveis_ingredientes);
                             listView_editar_ingredientes.setAdapter(itemsAdapter);
-                            listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
                             progressBar.setVisibility(View.GONE);
                         }
@@ -225,5 +228,26 @@ public class EditarDieta extends AppCompatActivity {
 
     public void cancelar(View view) {
         finish();
+    }
+
+    private void configura_listView(){
+        listView_editar_ingredientes = findViewById(R.id.listView_editar_ingredientes);
+        listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+        listView_editar_ingredientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i("MY_LISTVIEW", "pos = "+i+", list size = "+listView_editar_ingredientes.getCount());
+                if(listView_editar_ingredientes.isItemChecked(i)){
+                    view.findViewById(R.id.listView_poss_ing_add).setVisibility(View.GONE);
+                    view.findViewById(R.id.listView_poss_ing_remove).setVisibility(View.VISIBLE);
+                }
+                else{
+                    view.findViewById(R.id.listView_poss_ing_remove).setVisibility(View.GONE);
+                    view.findViewById(R.id.listView_poss_ing_add).setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
     }
 }

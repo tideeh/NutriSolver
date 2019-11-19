@@ -23,7 +23,7 @@
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/listView_ingredientes"
+                android:id="@+id/listView_dieta_atual"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="9">
@@ -57,10 +57,8 @@
     </LinearLayout>
 
     <ProgressBar
+        style="@style/my_progress_bar"
         android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </FrameLayout>

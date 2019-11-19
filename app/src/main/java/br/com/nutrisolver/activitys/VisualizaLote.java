@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -25,6 +24,8 @@ import java.util.Objects;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
+import br.com.nutrisolver.tools.AdapterDietaAtual;
+import br.com.nutrisolver.tools.AdapterPossiveisIngredientes;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
@@ -34,7 +35,7 @@ public class VisualizaLote extends AppCompatActivity {
     private String lote_id;
     private String lote_nome;
     private ProgressBar progressBar;
-    private ListView listView_ingredientes;
+    private ListView listView_dieta_atual;
     private String dieta_ativa_id;
     private List<String> ingredientes;
 
@@ -43,7 +44,6 @@ public class VisualizaLote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualiza_lote);
         progressBar = findViewById(R.id.progress_bar);
-        listView_ingredientes = (ListView) findViewById(R.id.listView_ingredientes);
 
         Intent it = getIntent();
         lote_id = it.getStringExtra("lote_id");
@@ -53,6 +53,8 @@ public class VisualizaLote extends AppCompatActivity {
             startActivity(new Intent(this, TelaPrincipal.class));
             finish();
         }
+
+        configura_listView();
 
         atualiza_lista_dieta();
         configura_toolbar();
@@ -75,8 +77,9 @@ public class VisualizaLote extends AppCompatActivity {
                                 break;
                             }
 
-                            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(VisualizaLote.this, android.R.layout.simple_list_item_1, ingredientes);
-                            listView_ingredientes.setAdapter(itemsAdapter);
+                            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(VisualizaLote.this, ingredientes);
+                            //ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(VisualizaLote.this, android.R.layout.simple_list_item_1, ingredientes);
+                            listView_dieta_atual.setAdapter(itemsAdapter);
                         } else {
                             Log.i("MY_FIRESTORE", "atualiza_lista_dieta: " + task.getException());
                         }
@@ -137,10 +140,15 @@ public class VisualizaLote extends AppCompatActivity {
             Dieta d = (Dieta) data.getSerializableExtra("dieta_editada");
             ingredientes = d.getIngredientes();
 
-            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientes);
-            listView_ingredientes.setAdapter(itemsAdapter);
+            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(this, ingredientes);
+            //ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientes);
+            listView_dieta_atual.setAdapter(itemsAdapter);
 
             dieta_ativa_id = d.getId();
         }
+    }
+
+    private void configura_listView(){
+        listView_dieta_atual = (ListView) findViewById(R.id.listView_dieta_atual);
     }
 }

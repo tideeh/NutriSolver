@@ -73,6 +73,7 @@ public class SelecionarFazenda extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    adapterFazenda.clear();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         adapterFazenda.addItem(document.toObject(Fazenda.class));
                     }
