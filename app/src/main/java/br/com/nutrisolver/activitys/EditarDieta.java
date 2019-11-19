@@ -1,8 +1,11 @@
 package br.com.nutrisolver.activitys;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
@@ -22,8 +25,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
@@ -34,6 +40,9 @@ import br.com.nutrisolver.tools.UserUtil;
 
 public class EditarDieta extends AppCompatActivity {
     public List<String> possiveis_ingredientes = new ArrayList<>();// = new String[] { "Milho", "Farelo de Soja", "Feno" };
+    private final long TIMEOUT_DB = 1 * 60 * 1000; // ms (MIN * 60 * 100)
+
+    private SharedPreferences sharedpreferences;
     Dieta dieta;
     private String lote_id;
     private String lote_nome;
@@ -48,6 +57,7 @@ public class EditarDieta extends AppCompatActivity {
 
         listView_editar_ingredientes = findViewById(R.id.listView_editar_ingredientes);
         progressBar = findViewById(R.id.progress_bar);
+        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
         Intent it = getIntent();
         lote_id = it.getStringExtra("lote_id");
@@ -76,31 +86,58 @@ public class EditarDieta extends AppCompatActivity {
          */
 
 
+
         progressBar.setVisibility(View.VISIBLE);
-        // recebe os possiveis ingredientes
-        DataBaseUtil.getInstance().getDocument("possiveis_ingredientes", "possiveis_ingredientes")
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document != null) {
-                                PossiveisIngredientes possiveisIngredientes = document.toObject(PossiveisIngredientes.class);
 
-                                if (possiveisIngredientes != null) {
-                                    Log.i("MY_FIRESTORE", " " + possiveisIngredientes.getIngredientes().toString());
+        // busca no sharedPreferences caso nao tenha passado TIMEOUT_DB desde a ultima consulta no db
 
-                                    possiveis_ingredientes = possiveisIngredientes.getIngredientes();
+        if(System.currentTimeMillis() - sharedpreferences.getLong("possiveis_ingredientes_last_update", 0) < TIMEOUT_DB){
+            String ing_aux = sharedpreferences.getString("possiveis_ingredientes", null);
+
+            if(ing_aux != null) {
+                possiveis_ingredientes = new ArrayList<>(Arrays.asList(ing_aux.split(";;;")));
+            }
+
+            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, possiveis_ingredientes);
+            listView_editar_ingredientes.setAdapter(itemsAdapter);
+            listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+            progressBar.setVisibility(View.GONE);
+        }
+        else{
+            // recebe os possiveis ingredientes
+            DataBaseUtil.getInstance().getDocument("possiveis_ingredientes", "possiveis_ingredientes")
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) {
+                                    PossiveisIngredientes possiveisIngredientes = document.toObject(PossiveisIngredientes.class);
+
+                                    if (possiveisIngredientes != null) {
+                                        Log.i("MY_FIRESTORE", " " + possiveisIngredientes.getIngredientes().toString());
+
+                                        possiveis_ingredientes = possiveisIngredientes.getIngredientes();
+
+                                        // salva no sharedpreferences por um tempo para evitar muitos acessos no DB
+                                        String possiveis_ingredientes_string = TextUtils.join(";;;", possiveis_ingredientes);
+
+                                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                                        editor.putString("possiveis_ingredientes", possiveis_ingredientes_string);
+                                        editor.putLong("possiveis_ingredientes_last_update", System.currentTimeMillis());
+                                        editor.apply();
+                                    }
                                 }
-
-                                ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(EditarDieta.this, android.R.layout.simple_list_item_activated_1, possiveis_ingredientes);
-                                listView_editar_ingredientes.setAdapter(itemsAdapter);
-                                listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
                             }
+                            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(EditarDieta.this, android.R.layout.simple_list_item_activated_1, possiveis_ingredientes);
+                            listView_editar_ingredientes.setAdapter(itemsAdapter);
+                            listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+                            progressBar.setVisibility(View.GONE);
                         }
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+                    });
+        }
     }
 
     @Override
