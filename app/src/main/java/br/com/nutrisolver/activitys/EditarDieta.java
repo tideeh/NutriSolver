@@ -34,6 +34,7 @@ import java.util.Set;
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
 import br.com.nutrisolver.objects.PossiveisIngredientes;
+import br.com.nutrisolver.tools.AdapterPossiveisIngredientes;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.ToastUtil;
 import br.com.nutrisolver.tools.UserUtil;
@@ -98,7 +99,7 @@ public class EditarDieta extends AppCompatActivity {
                 possiveis_ingredientes = new ArrayList<>(Arrays.asList(ing_aux.split(";;;")));
             }
 
-            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, possiveis_ingredientes);
+            AdapterPossiveisIngredientes itemsAdapter = new AdapterPossiveisIngredientes(this, possiveis_ingredientes);
             listView_editar_ingredientes.setAdapter(itemsAdapter);
             listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
@@ -130,7 +131,7 @@ public class EditarDieta extends AppCompatActivity {
                                     }
                                 }
                             }
-                            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(EditarDieta.this, android.R.layout.simple_list_item_activated_1, possiveis_ingredientes);
+                            AdapterPossiveisIngredientes itemsAdapter = new AdapterPossiveisIngredientes(EditarDieta.this, possiveis_ingredientes);
                             listView_editar_ingredientes.setAdapter(itemsAdapter);
                             listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 

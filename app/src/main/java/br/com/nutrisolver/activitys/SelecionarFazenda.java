@@ -28,13 +28,13 @@ import java.util.List;
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.tools.AdapterFazenda;
+import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class SelecionarFazenda extends AppCompatActivity {
     //private FirebaseFirestore db;
     private SharedPreferences sharedpreferences;
-    private List<Fazenda> fazendas;
     private ListView listView_Fazendas;
     private AdapterFazenda adapterFazenda;
     private ProgressBar progressBar;
@@ -44,16 +44,15 @@ public class SelecionarFazenda extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selecionar_fazenda);
 
-        listView_Fazendas = (ListView) findViewById(R.id.lista_fazendas);
         progressBar = findViewById(R.id.progress_bar);
-
-        //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
         if (!UserUtil.isLogged()) {
             startActivity(new Intent(this, Login.class));
             finish();
         }
+
+        configura_listView();
 
         atualiza_lista_de_fazendas();
         configura_toolbar();
@@ -74,31 +73,15 @@ public class SelecionarFazenda extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    fazendas = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        fazendas.add(document.toObject(Fazenda.class));
+                        adapterFazenda.addItem(document.toObject(Fazenda.class));
                     }
-                    adapterFazenda = new AdapterFazenda(fazendas, SelecionarFazenda.this);
-                    listView_Fazendas.setAdapter(adapterFazenda);
                     progressBar.setVisibility(View.GONE);
                     Log.i("MY_FIRESTORE", "Sucesso atualiza lista de fazendas");
                 } else {
                     Log.i("MY_FIRESTORE", "Error getting documents: "+task.getException());
                     progressBar.setVisibility(View.GONE);
                 }
-            }
-        });
-
-        listView_Fazendas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString("fazenda_corrente_id", adapterFazenda.getItemIdString(i));
-                editor.apply();
-
-                Intent it = new Intent(view.getContext(), TelaPrincipal.class);
-                startActivity(it);
-                finish();
             }
         });
     }
@@ -156,5 +139,24 @@ public class SelecionarFazenda extends AppCompatActivity {
 
         startActivity(new Intent(this, Login.class));
         finish();
+    }
+
+    private void configura_listView(){
+        listView_Fazendas = (ListView) findViewById(R.id.lista_fazendas);
+        adapterFazenda = new AdapterFazenda(this);
+        listView_Fazendas.setAdapter(adapterFazenda);
+        listView_Fazendas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("fazenda_corrente_id", adapterFazenda.getItemIdString(position));
+                editor.apply();
+
+                Intent it = new Intent(view.getContext(), TelaPrincipal.class);
+                startActivity(it);
+                finish();
+            }
+        });
     }
 }

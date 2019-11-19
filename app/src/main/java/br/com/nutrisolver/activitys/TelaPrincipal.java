@@ -41,13 +41,10 @@ import br.com.nutrisolver.tools.UserUtil;
 
 public class TelaPrincipal extends AppCompatActivity {
     private static final int CADASTRAR_LOTE_REQUEST = 1001;
-    //private FirebaseFirestore db;
     private SharedPreferences sharedpreferences;
     private String fazenda_corrente_id;
     private String fazenda_corrente_nome;
-    //private Fazenda fazenda;
     private ListView listView_lotes;
-    private List<Lote> lotes;
     private AdapterLote adapterLote;
     // nomes e IDs na mesma ordem para usar no spinner
     private List<String> fazendas_nomes;
@@ -64,18 +61,16 @@ public class TelaPrincipal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_principal);
 
-        Log.i("MY_ACTIVITY_RESULT", "1");
-
-        //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         progressBar = findViewById(R.id.progress_bar);
-        listView_lotes = (ListView) findViewById(R.id.lista_lotes);
         spinner = findViewById(R.id.spn_fazendas);
 
         if (!UserUtil.isLogged()) {
             startActivity(new Intent(this, Login.class));
             finish();
         }
+
+        configura_listView();
 
         verifica_fazenda_corrente();
 
@@ -94,32 +89,19 @@ public class TelaPrincipal extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            lotes = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                lotes.add(document.toObject(Lote.class));
+                                adapterLote.addItem(document.toObject(Lote.class));
+                                Log.i("MY_FIRESTORE", "lotes do db: "+document.toObject(Lote.class).getNome());
                             }
-                            adapterLote = new AdapterLote(lotes, TelaPrincipal.this);
-                            listView_lotes.setAdapter(adapterLote);
                             progressBar.setVisibility(View.GONE);
                         } else {
-                            Log.i("MY_FIRESTORE", "Error getting documents: ", task.getException());
+                            Log.i("MY_FIRESTORE", "Error getting documents: "+task.getException());
                             progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
 
         //db.collection("lotes").whereEqualTo("fazenda_id", fazenda_corrente_id).get()
-
-        listView_lotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent it = new Intent(view.getContext(), VisualizaLote.class);
-                it.putExtra("lote_id", adapterLote.getItemIdString(position));
-                it.putExtra("lote_nome", adapterLote.getItemName(position));
-                startActivity(it);
-            }
-        });
     }
 
     private void verifica_fazenda_corrente() {
@@ -307,11 +289,24 @@ public class TelaPrincipal extends AppCompatActivity {
         if (requestCode == CADASTRAR_LOTE_REQUEST && resultCode == 1) { // foi cadastrado um lote novo, adiciona ele na lista de lotes e atualizar o adapter da listView
             Lote l = (Lote) data.getSerializableExtra("lote_cadastrado");
             Log.i("MY_ACTIVITY_RESULT", "lote nome: " + l.getNome());
-            if(lotes == null)
-                lotes = new ArrayList<>();
-            lotes.add(l);
-            adapterLote = new AdapterLote(lotes, TelaPrincipal.this);
-            listView_lotes.setAdapter(adapterLote);
+
+            adapterLote.addItem(l);
         }
+    }
+
+    private void configura_listView(){
+        listView_lotes = (ListView) findViewById(R.id.lista_lotes);
+        adapterLote = new AdapterLote(this);
+        listView_lotes.setAdapter(adapterLote);
+        listView_lotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent it = new Intent(view.getContext(), VisualizaLote.class);
+                it.putExtra("lote_id", adapterLote.getItemIdString(position));
+                it.putExtra("lote_nome", adapterLote.getItemName(position));
+                startActivity(it);
+            }
+        });
     }
 }
