@@ -15,9 +15,9 @@ import java.util.List;
 
 import br.com.nutrisolver.R;
 
-public class AdapterPossiveisIngredientes extends ArrayAdapter<String> {
+public class AdapterIngredienteNome extends ArrayAdapter<String> {
 
-    public AdapterPossiveisIngredientes(Context context, List<String> possiveis_ingredientes){
+    public AdapterIngredienteNome(Context context, List<String> possiveis_ingredientes){
         super(context, 0, possiveis_ingredientes);
     }
 

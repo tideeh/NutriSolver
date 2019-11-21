@@ -9,29 +9,19 @@ import java.util.UUID;
 public class Lote implements Serializable {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
-    private String id;
-    private String nome;
-    private String data_criacao;
-    private String fazenda_id;
+    private String id = UUID.randomUUID().toString();
+    private String nome = "";
+    private String data_criacao = sdf.format(new Timestamp(System.currentTimeMillis()));
+    private String fazenda_id = "";
 
-    public Lote(){
-        this.id = UUID.randomUUID().toString();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
-    }
+    public Lote(){}
 
     public Lote(String nome){
-        this.id = UUID.randomUUID().toString();
         this.nome = nome;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
     }
 
     public Lote(String nome, String fazenda_id){
-        this.id = UUID.randomUUID().toString();
         this.nome = nome;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
         this.fazenda_id = fazenda_id;
     }
 

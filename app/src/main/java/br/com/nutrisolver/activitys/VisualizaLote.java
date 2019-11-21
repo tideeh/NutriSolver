@@ -25,7 +25,6 @@ import java.util.Objects;
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
 import br.com.nutrisolver.tools.AdapterDietaAtual;
-import br.com.nutrisolver.tools.AdapterPossiveisIngredientes;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
@@ -37,7 +36,7 @@ public class VisualizaLote extends AppCompatActivity {
     private ProgressBar progressBar;
     private ListView listView_dieta_atual;
     private String dieta_ativa_id;
-    private List<String> ingredientes;
+    private List<String> ingredientes_nomes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +63,19 @@ public class VisualizaLote extends AppCompatActivity {
     private void atualiza_lista_dieta() {
         progressBar.setVisibility(View.VISIBLE);
 
-        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("dietas", new String[]{"lote_id", "ativo"}, new Object[]{lote_id, true})
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("dietas", new String[]{"lote_id", "ativo"}, new Object[]{lote_id, true}, 1)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            ingredientes = new ArrayList<>();
+                            ingredientes_nomes = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.i("MY_FIRESTORE", "atualiza_lista_dieta: entrou 1");
-                                ingredientes = document.toObject(Dieta.class).getIngredientes();
+                                ingredientes_nomes = document.toObject(Dieta.class).getIngredientes_nomes();
                                 dieta_ativa_id = document.toObject(Dieta.class).getId();
-                                break;
                             }
 
-                            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(VisualizaLote.this, ingredientes);
+                            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(VisualizaLote.this, ingredientes_nomes);
                             //ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(VisualizaLote.this, android.R.layout.simple_list_item_1, ingredientes);
                             listView_dieta_atual.setAdapter(itemsAdapter);
                         } else {
@@ -136,11 +134,11 @@ public class VisualizaLote extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EDITAR_DIETA_REQUEST && resultCode == 1) { // foi editado uma nova dieta, atualiza a lista com os ingredientes
+        if (requestCode == EDITAR_DIETA_REQUEST && resultCode == 1) { // foi editado uma nova dieta, atualiza a lista com os ingredientes_nomes
             Dieta d = (Dieta) data.getSerializableExtra("dieta_editada");
-            ingredientes = d.getIngredientes();
+            ingredientes_nomes = d.getIngredientes_nomes();
 
-            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(this, ingredientes);
+            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(this, ingredientes_nomes);
             //ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientes);
             listView_dieta_atual.setAdapter(itemsAdapter);
 

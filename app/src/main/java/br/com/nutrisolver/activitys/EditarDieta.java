@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -23,26 +22,24 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
-import br.com.nutrisolver.objects.PossiveisIngredientes;
-import br.com.nutrisolver.tools.AdapterLote;
-import br.com.nutrisolver.tools.AdapterPossiveisIngredientes;
+import br.com.nutrisolver.objects.Ingrediente;
+import br.com.nutrisolver.tools.AdapterIngredienteNome;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.ToastUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class EditarDieta extends AppCompatActivity {
-    public List<String> possiveis_ingredientes = new ArrayList<>();// = new String[] { "Milho", "Farelo de Soja", "Feno" };
+    public List<String> ingredientes_nomes = new ArrayList<>();// = new String[] { "Milho", "Farelo de Soja", "Feno" };
     private final long TIMEOUT_DB = 1 * 60 * 1000; // ms (MIN * 60 * 100)
 
     private SharedPreferences sharedpreferences;
@@ -79,63 +76,52 @@ public class EditarDieta extends AppCompatActivity {
     }
 
     private void atualiza_lista_ingredientes() {
-        /* usado para a criacao do primeiro documento dos possiveis ingredientes
-        possiveis_ingredientes.add("Milho");
-        possiveis_ingredientes.add("Farelo de Soja");
-        possiveis_ingredientes.add("Feno");
-
-        PossiveisIngredientes possiveisIngredientes = new PossiveisIngredientes();
-        possiveisIngredientes.setIngredientes(possiveis_ingredientes);
-        DataBaseUtil.getInstance().insertDocument("possiveis_ingredientes", "possiveis_ingredientes", possiveisIngredientes);
+        //usado para a criacao do primeiro documento dos possiveis ingredientes
+        /*
+        DataBaseUtil.getInstance().insertDocument("ingredientes", "Milho", new Ingrediente("Milho"));
+        DataBaseUtil.getInstance().insertDocument("ingredientes", "Caroço de algodão", new Ingrediente("Caroço de algodão"));
+        DataBaseUtil.getInstance().insertDocument("ingredientes", "Farelo de Soja", new Ingrediente("Farelo de Soja"));
+        DataBaseUtil.getInstance().insertDocument("ingredientes", "Feno", new Ingrediente("Feno"));
+        DataBaseUtil.getInstance().insertDocument("ingredientes", "Silagem", new Ingrediente("Silagem"));
 
          */
-
 
 
         progressBar.setVisibility(View.VISIBLE);
 
         // busca no sharedPreferences caso nao tenha passado TIMEOUT_DB desde a ultima consulta no db
 
-        if(System.currentTimeMillis() - sharedpreferences.getLong("possiveis_ingredientes_last_update", 0) < TIMEOUT_DB){
-            String ing_aux = sharedpreferences.getString("possiveis_ingredientes", null);
+        if (System.currentTimeMillis() - sharedpreferences.getLong("ingredientes_nomes_last_update", 0) < TIMEOUT_DB) {
+            String ing_aux = sharedpreferences.getString("ingredientes_nomes", null);
 
-            if(ing_aux != null) {
-                possiveis_ingredientes = new ArrayList<>(Arrays.asList(ing_aux.split(";;;")));
+            if (ing_aux != null) {
+                ingredientes_nomes = new ArrayList<>(Arrays.asList(ing_aux.split(";;;")));
             }
 
-            AdapterPossiveisIngredientes itemsAdapter = new AdapterPossiveisIngredientes(this, possiveis_ingredientes);
+            AdapterIngredienteNome itemsAdapter = new AdapterIngredienteNome(this, ingredientes_nomes);
             listView_editar_ingredientes.setAdapter(itemsAdapter);
 
-
             progressBar.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             // recebe os possiveis ingredientes
-            DataBaseUtil.getInstance().getDocument("possiveis_ingredientes", "possiveis_ingredientes")
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            DataBaseUtil.getInstance().getDocumentsWhereEqualTo("ingredientes", "ativo", true)
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document != null) {
-                                    PossiveisIngredientes possiveisIngredientes = document.toObject(PossiveisIngredientes.class);
-
-                                    if (possiveisIngredientes != null) {
-                                        Log.i("MY_FIRESTORE", " " + possiveisIngredientes.getIngredientes().toString());
-
-                                        possiveis_ingredientes = possiveisIngredientes.getIngredientes();
-
-                                        // salva no sharedpreferences por um tempo para evitar muitos acessos no DB
-                                        String possiveis_ingredientes_string = TextUtils.join(";;;", possiveis_ingredientes);
-
-                                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                                        editor.putString("possiveis_ingredientes", possiveis_ingredientes_string);
-                                        editor.putLong("possiveis_ingredientes_last_update", System.currentTimeMillis());
-                                        editor.apply();
-                                    }
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    ingredientes_nomes.add(document.toObject(Ingrediente.class).getNome());
                                 }
+
+                                // salva no sharedpreferences por um tempo para evitar muitos acessos no DB
+                                String possiveis_ingredientes_string = TextUtils.join(";;;", ingredientes_nomes);
+
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString("ingredientes_nomes", possiveis_ingredientes_string);
+                                editor.putLong("ingredientes_nomes_last_update", System.currentTimeMillis());
+                                editor.apply();
                             }
-                            AdapterPossiveisIngredientes itemsAdapter = new AdapterPossiveisIngredientes(EditarDieta.this, possiveis_ingredientes);
+                            AdapterIngredienteNome itemsAdapter = new AdapterIngredienteNome(EditarDieta.this, ingredientes_nomes);
                             listView_editar_ingredientes.setAdapter(itemsAdapter);
 
                             progressBar.setVisibility(View.GONE);
@@ -193,8 +179,8 @@ public class EditarDieta extends AppCompatActivity {
 
         for (int i = 0; i < len; i++) {
             if (checked.get(i)) {
-                String item = possiveis_ingredientes.get(i);
-                dieta.addIngrediente(item);
+                String item = ingredientes_nomes.get(i);
+                dieta.addIngrediente_nome(item);
             }
         }
 
@@ -230,19 +216,18 @@ public class EditarDieta extends AppCompatActivity {
         finish();
     }
 
-    private void configura_listView(){
+    private void configura_listView() {
         listView_editar_ingredientes = findViewById(R.id.listView_editar_ingredientes);
         listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         listView_editar_ingredientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.i("MY_LISTVIEW", "pos = "+i+", list size = "+listView_editar_ingredientes.getCount());
-                if(listView_editar_ingredientes.isItemChecked(i)){
+                Log.i("MY_LISTVIEW", "pos = " + i + ", list size = " + listView_editar_ingredientes.getCount());
+                if (listView_editar_ingredientes.isItemChecked(i)) {
                     view.findViewById(R.id.listView_poss_ing_add).setVisibility(View.GONE);
                     view.findViewById(R.id.listView_poss_ing_remove).setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     view.findViewById(R.id.listView_poss_ing_remove).setVisibility(View.GONE);
                     view.findViewById(R.id.listView_poss_ing_add).setVisibility(View.VISIBLE);
                 }

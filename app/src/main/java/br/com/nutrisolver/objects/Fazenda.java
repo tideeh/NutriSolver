@@ -9,34 +9,19 @@ import java.util.UUID;
 public class Fazenda {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
-    private String id;
-    private String nome;
-    private String data_criacao;
-    //private List<Lote> lotes;
-    private String dono_uid;
+    private String id = UUID.randomUUID().toString();
+    private String nome = "";
+    private String data_criacao = sdf.format(new Timestamp(System.currentTimeMillis()));
+    private String dono_uid = "";
 
-
-    public Fazenda(){
-        this.id = UUID.randomUUID().toString();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
-        //lotes = new ArrayList<>();
-    }
+    public Fazenda(){}
 
     public Fazenda(String nome){
-        this.id = UUID.randomUUID().toString();
         this.nome = nome;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
-        //lotes = new ArrayList<>();
     }
 
     public Fazenda(String nome, String dono_uid){
-        this.id = UUID.randomUUID().toString();
         this.nome = nome;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
-        //lotes = new ArrayList<>();
         this.dono_uid = dono_uid;
     }
 
@@ -55,18 +40,6 @@ public class Fazenda {
     public void setData_criacao(String data_criacao) {
         this.data_criacao = data_criacao;
     }
-
-    //public List<Lote> getLotes() {
-    //    return lotes;
-    //}
-
-   // public void setLotes(List<Lote> lotes) {
-   //     this.lotes = lotes;
-    //}
-
-    //public void addLote(Lote lote) {
-    //    this.lotes.add(lote);
-    //}
 
     public String getId() {
         return id;

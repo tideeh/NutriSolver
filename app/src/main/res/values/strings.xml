@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">NutriSolver</string>
     <string name="logo_name">NUTRISOLVER</string>
     <string name="facebook_app_id">1327187937462145</string>
@@ -37,5 +37,5 @@
     <string name="cancelar">Cancelar</string>
     <string name="salvar_dieta">Salvar Dieta</string>
 
-    <string name="com.crashlytics.useFirebaseAppId">true</string>
+    <string name="com.crashlytics.useFirebaseAppId" tools:ignore="ExtraTranslation">true</string>
 </resources>

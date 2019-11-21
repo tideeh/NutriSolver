@@ -10,42 +10,31 @@ import java.util.UUID;
 public class Dieta implements Serializable {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
-    private String id;
-    private boolean ativo;
-    private String data_criacao;
-    private String lote_id;
-    private List<String> ingredientes;
+    private String id = UUID.randomUUID().toString();
+    private boolean ativo = true;
+    private String data_criacao = sdf.format(new Timestamp(System.currentTimeMillis()));
+    private String lote_id = "";
+    private List<String> ingredientes_nomes = new ArrayList<>(); // tambem serve como DocumentReference pois o id do ingrediente eh o seu nome
 
-    public Dieta(){
-        this.id = UUID.randomUUID().toString();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
-        this.ingredientes = new ArrayList<>();
-        this.ativo = true;
-    }
+    public Dieta(){}
 
     public Dieta(String lote_id){
-        this.id = UUID.randomUUID().toString();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.data_criacao = sdf.format(timestamp);
-        this.ingredientes = new ArrayList<>();
-        this.ativo = true;
         this.lote_id = lote_id;
     }
 
-    public List<String> getIngredientes() {
-        return ingredientes;
+    public List<String> getIngredientes_nomes() {
+        return ingredientes_nomes;
     }
 
-    public void setIngredientes(List<String> ingredientes) {
-        this.ingredientes = ingredientes;
+    public void setIngredientes_nomes(List<String> ingredientes_nomes) {
+        this.ingredientes_nomes = ingredientes_nomes;
     }
 
-    public void addIngrediente(String ingrediente){
-        if(this.ingredientes == null)
-            this.ingredientes = new ArrayList<>();
+    public void addIngrediente_nome(String ingrediente_nome){
+        if(this.ingredientes_nomes == null)
+            this.ingredientes_nomes = new ArrayList<>();
 
-        this.ingredientes.add(ingrediente);
+        this.ingredientes_nomes.add(ingrediente_nome);
     }
 
     public String getId() {
