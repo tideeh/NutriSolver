@@ -39,6 +39,9 @@ import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+
 public class TelaPrincipal extends AppCompatActivity {
     private static final int CADASTRAR_LOTE_REQUEST = 1001;
     private SharedPreferences sharedpreferences;
@@ -58,6 +61,8 @@ public class TelaPrincipal extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Fabric.with(this, new Crashlytics());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_principal);
 

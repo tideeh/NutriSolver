@@ -36,4 +36,6 @@
     <string name="selecione_os_ingredientes_da_dieta">Selecione os ingredientes da Dieta</string>
     <string name="cancelar">Cancelar</string>
     <string name="salvar_dieta">Salvar Dieta</string>
+
+    <string name="com.crashlytics.useFirebaseAppId">true</string>
 </resources>
