@@ -38,4 +38,5 @@
     <string name="salvar_dieta">Salvar Dieta</string>
 
     <string name="com.crashlytics.useFirebaseAppId" tools:ignore="ExtraTranslation">true</string>
+    <string name="selecione_o_dispositivo_para_conexao_bluetooth">Selecione o dispositivo para conexão Bluetooth</string>
 </resources>

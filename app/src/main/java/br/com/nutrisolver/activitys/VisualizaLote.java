@@ -149,4 +149,7 @@ public class VisualizaLote extends AppCompatActivity {
     private void configura_listView(){
         listView_dieta_atual = (ListView) findViewById(R.id.listView_dieta_atual);
     }
+
+    public void executar_teste(View view) {
+    }
 }

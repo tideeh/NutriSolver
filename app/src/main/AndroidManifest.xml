@@ -4,6 +4,9 @@
     package="br.com.nutrisolver">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.EditarDieta"></activity>
+        <activity android:name=".activitys.ListaDispositivosBT"></activity>
+        <activity android:name=".activitys.ExecutarTeste1" />
+        <activity android:name=".activitys.EditarDieta" />
         <activity android:name=".activitys.VisualizaLote" />
         <activity
             android:name=".activitys.CadastrarLote"
