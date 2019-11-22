@@ -382,6 +382,10 @@ public class ExecutarTeste1 extends AppCompatActivity {
             ToastUtil.show(this, "Digite a duração do teste!", Toast.LENGTH_SHORT);
             return;
         }
+        if(thread_conectada == null){
+            ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
+            return;
+        }
 
         if(estado.equals("0")) { // ligar
             estado = alterarEstado(LIGAR_LED);
@@ -437,7 +441,13 @@ public class ExecutarTeste1 extends AppCompatActivity {
     }
 
     private String alterarEstado(String novoEstado){
-        thread_conectada.write(novoEstado.getBytes());
+        if(thread_conectada == null){
+            ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
+        }
+        else{
+            thread_conectada.write(novoEstado.getBytes());
+        }
+
         return novoEstado;
     }
 }
