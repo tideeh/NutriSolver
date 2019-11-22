@@ -83,10 +83,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
         tempo_para_execucao = findViewById(R.id.tempo_para_execucao);
         textView_bt_read = findViewById(R.id.leitura_bluetooth_debug);
 
-
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        check_bt_state(); // verifica se o bluetooth existe, caso exista e esteja desligado, pede para ligar
 
         bluetooth_io = new Handler() {
             @Override
@@ -117,7 +114,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        check_bt_connection();
+        check_bt_state(); // verifica se o bluetooth existe, caso exista e esteja desligado, pede para ligar
     }
 
     @Override
@@ -134,11 +131,13 @@ public class ExecutarTeste1 extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             ToastUtil.show(this, "Device does not support bluetooth", Toast.LENGTH_LONG);
             finish();
-        } else {
-            if (!bluetoothAdapter.isEnabled()) { // pede permissao para ligar o bt
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
+        }
+        else if (bluetoothAdapter.isEnabled()) { // se esta ativado, entao verifica a conexao
+            check_bt_connection();
+        }
+        else { // pede permissao para ligar o bt
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
     }
 
