@@ -3,8 +3,12 @@ package br.com.nutrisolver.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,6 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import br.com.nutrisolver.BuildConfig;
 import br.com.nutrisolver.R;
@@ -60,7 +67,9 @@ public class SplashScreen extends AppCompatActivity {
         catch (NoSuchAlgorithmException e) {
 
         }
-        */
+
+ */
+
 
         //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
