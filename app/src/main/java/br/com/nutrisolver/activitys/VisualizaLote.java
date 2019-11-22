@@ -151,5 +151,6 @@ public class VisualizaLote extends AppCompatActivity {
     }
 
     public void executar_teste(View view) {
+        startActivity(new Intent(this, ExecutarTeste1.class));
     }
 }

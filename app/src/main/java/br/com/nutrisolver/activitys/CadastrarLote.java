@@ -29,7 +29,7 @@ public class CadastrarLote extends AppCompatActivity {
     private SharedPreferences sharedpreferences;
     //private FirebaseFirestore db;
     private EditText input_nome_lote;
-    private ProgressBar progressBar;
+        private ProgressBar progressBar;
     private Lote lote;
     private String fazenda_corrente_id;
 
