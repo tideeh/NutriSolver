@@ -52,12 +52,14 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:background="@drawable/ripple_efect_menu_lateral"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:onClick="menu_lateral_testar_amostra">
 
                 <ImageView
                     android:layout_width="40dp"

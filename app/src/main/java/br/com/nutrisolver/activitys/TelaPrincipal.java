@@ -22,6 +22,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,8 +39,6 @@ import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
-
-import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
 public class TelaPrincipal extends AppCompatActivity {
@@ -97,11 +96,11 @@ public class TelaPrincipal extends AppCompatActivity {
                             adapterLote.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 adapterLote.addItem(document.toObject(Lote.class));
-                                Log.i("MY_FIRESTORE", "lotes do db: "+document.toObject(Lote.class).getNome());
+                                Log.i("MY_FIRESTORE", "lotes do db: " + document.toObject(Lote.class).getNome());
                             }
                             progressBar.setVisibility(View.GONE);
                         } else {
-                            Log.i("MY_FIRESTORE", "Error getting documents: "+task.getException());
+                            Log.i("MY_FIRESTORE", "Error getting documents: " + task.getException());
                             progressBar.setVisibility(View.GONE);
                         }
                     }
@@ -300,7 +299,7 @@ public class TelaPrincipal extends AppCompatActivity {
         }
     }
 
-    private void configura_listView(){
+    private void configura_listView() {
         listView_lotes = (ListView) findViewById(R.id.lista_lotes);
         adapterLote = new AdapterLote(this);
         listView_lotes.setAdapter(adapterLote);
@@ -314,5 +313,9 @@ public class TelaPrincipal extends AppCompatActivity {
                 startActivity(it);
             }
         });
+    }
+
+    public void menu_lateral_testar_amostra(View v) {
+        startActivity(new Intent(this, ExecutarTeste1.class));
     }
 }

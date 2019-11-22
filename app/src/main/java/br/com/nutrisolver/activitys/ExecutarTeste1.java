@@ -1,9 +1,5 @@
 package br.com.nutrisolver.activitys;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -22,6 +18,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,34 +30,35 @@ import java.util.UUID;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.tools.ToastUtil;
+import br.com.nutrisolver.tools.UserUtil;
 
 public class ExecutarTeste1 extends AppCompatActivity {
+    public static final String TOAST = "toast";
+    private static final int MESSAGE_READ = 0;
+    private static final int MESSAGE_WRITE = 1;
+    private static final int MESSAGE_TOAST = 2;
+    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static String DESLIGAR_LED = "0";
     private static String LIGAR_LED = "1";
     private static String LIGAR_BUZZER = "2";
     private static String DESLIGAR_BUZZER = "3";
-    private static final int MESSAGE_READ = 0;
-    private static final int MESSAGE_WRITE = 1;
-    private static final int MESSAGE_TOAST = 2;
-    public static final String TOAST = "toast";
     private final int CONECTAR_DISPOSITIVO_REQUEST = 1001;
     private final int REQUEST_ENABLE_BT = 1;
     BluetoothAdapter bluetoothAdapter;
+    TextView textView_bt_read;
+    TextView textView_bt_send;
+    long startTime = 0;
+    Handler timerHandler = new Handler();
     private String device_mac_address;
     private BluetoothSocket bt_socket;
     private BluetoothDevice bt_device;
     private ExecutarTeste1.ConnectThread thread_para_conectar;
     private ExecutarTeste1.ConnectedThread thread_conectada;
-    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private Handler bluetooth_io;
-    TextView textView_bt_read;
     private ProgressBar progressBar;
     private String estado = "0";
     private EditText tempo_para_execucao;
     private int TEMPO_DO_TESTE = 10;
-    long startTime = 0;
-
-    Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
 
         @Override
@@ -67,7 +68,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
             int minutes = seconds / 60;
             seconds = seconds % 60;
 
-            ((TextView)findViewById(R.id.teste_timer)).setText(Integer.toString(TEMPO_DO_TESTE - seconds - 1));
+            ((TextView) findViewById(R.id.teste_timer)).setText(Integer.toString(TEMPO_DO_TESTE - seconds - 1));
 
             timerHandler.postDelayed(this, 500);
         }
@@ -82,6 +83,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         tempo_para_execucao = findViewById(R.id.tempo_para_execucao);
         textView_bt_read = findViewById(R.id.leitura_bluetooth_debug);
+        textView_bt_send = findViewById(R.id.envio_bluetooth_debug);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -90,14 +92,19 @@ public class ExecutarTeste1 extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case MESSAGE_WRITE:
+                        byte[] writeBuf = (byte[]) msg.obj;
+                        String writeMessage = new String(writeBuf, 0, writeBuf.length);
+                        Log.i("MY_BLUETOOTH", "write: " + writeMessage + "; nBytes: " + writeBuf.length);
+                        String aux1 = "Enviado: " + writeMessage;
+                        textView_bt_send.setText(aux1);
                         break;
                     case MESSAGE_READ:
                         byte[] readBuf = (byte[]) msg.obj;
                         // construct a string from the valid bytes in the buffer
                         String readMessage = new String(readBuf, 0, msg.arg1);
-                        Log.i("MY_BLUETOOTH", "read: " + readMessage + " nBytes: " + msg.arg1);
-                        String aux = "Leitura bluetooth: " + readMessage;
-                        textView_bt_read.setText(aux);
+                        Log.i("MY_BLUETOOTH", "read: " + readMessage + "; nBytes: " + msg.arg1);
+                        String aux2 = "Recebido: " + readMessage;
+                        textView_bt_read.setText(aux2);
                         break;
                     case MESSAGE_TOAST:
                         ToastUtil.show(ExecutarTeste1.this, msg.getData().getString(TOAST), Toast.LENGTH_SHORT);
@@ -113,6 +120,11 @@ public class ExecutarTeste1 extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (!UserUtil.isLogged()) {
+            startActivity(new Intent(this, Login.class));
+            finish();
+        }
 
         check_bt_state(); // verifica se o bluetooth existe, caso exista e esteja desligado, pede para ligar
     }
@@ -131,11 +143,9 @@ public class ExecutarTeste1 extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             ToastUtil.show(this, "Device does not support bluetooth", Toast.LENGTH_LONG);
             finish();
-        }
-        else if (bluetoothAdapter.isEnabled()) { // se esta ativado, entao verifica a conexao
+        } else if (bluetoothAdapter.isEnabled()) { // se esta ativado, entao verifica a conexao
             check_bt_connection();
-        }
-        else { // pede permissao para ligar o bt
+        } else { // pede permissao para ligar o bt
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
@@ -183,6 +193,107 @@ public class ExecutarTeste1 extends AppCompatActivity {
             }
 
         }
+    }
+
+    private void configura_toolbar() {
+        // adiciona a barra de tarefas na tela
+        Toolbar my_toolbar = findViewById(R.id.my_toolbar_main);
+        setSupportActionBar(my_toolbar);
+        // adiciona a seta de voltar na barra de tarefas
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void btn_ligar_teste(View view) {
+        String tempo_aux = tempo_para_execucao.getText().toString();
+        if (tempo_aux == null || tempo_aux.isEmpty()) {
+            ToastUtil.show(this, "Digite a duração do teste!", Toast.LENGTH_SHORT);
+            return;
+        }
+        if (thread_conectada == null) {
+            ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if(Integer.parseInt(tempo_aux) < 1){
+            ToastUtil.show(this, "Digite um valor maior que 0", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (estado.equals("0")) { // ligar
+            estado = alterarEstado(LIGAR_LED);
+            TEMPO_DO_TESTE = Integer.parseInt(tempo_aux);
+            ((Button) findViewById(R.id.btn_ligar)).setText("Teste em andamento..");
+
+            try {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+
+            ((TextView) findViewById(R.id.teste_status)).setText("Teste em andamento..");
+
+            startTime = System.currentTimeMillis();
+            timerHandler.postDelayed(timerRunnable, 0);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finalizarTeste();
+                }
+            }, Integer.parseInt(tempo_aux) * 1000);
+
+            Handler handler2 = new Handler();
+            handler2.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    desligaBuzzy();
+                }
+            }, (Integer.parseInt(tempo_aux) * 1000) + 500);
+
+        }
+    }
+
+    private void desligaBuzzy() {
+        estado = alterarEstado(DESLIGAR_BUZZER);
+        ((Button) findViewById(R.id.btn_ligar)).setText("Executar");
+        estado = alterarEstado(DESLIGAR_LED);
+
+        ((TextView) findViewById(R.id.teste_status)).setText("Teste finalizado!");
+    }
+
+    private void finalizarTeste() {
+        estado = alterarEstado(LIGAR_BUZZER);
+        ((TextView) findViewById(R.id.teste_status)).setText("Finalizando..");
+
+        timerHandler.removeCallbacks(timerRunnable);
+
+    }
+
+    private String alterarEstado(String novoEstado) {
+        if (thread_conectada == null) {
+            ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
+        } else {
+            thread_conectada.write(novoEstado.getBytes());
+        }
+
+        return novoEstado;
     }
 
     private class ConnectThread extends Thread {
@@ -325,9 +436,8 @@ public class ExecutarTeste1 extends AppCompatActivity {
                 mmOutStream.write(bytes);
 
                 // Share the sent message with the UI activity.
-                //Message writtenMsg = bluetooth_io.obtainMessage(
-                //        MESSAGE_WRITE, -1, -1, mmBuffer);
-                //writtenMsg.sendToTarget();
+                Message writtenMsg = bluetooth_io.obtainMessage(MESSAGE_WRITE, bytes);
+                writtenMsg.sendToTarget();
             } catch (IOException e) {
                 Log.e("MY_BLUETOOTH", "Error occurred when sending data", e);
 
@@ -353,101 +463,5 @@ public class ExecutarTeste1 extends AppCompatActivity {
 
             this.interrupt();
         }
-    }
-
-    private void configura_toolbar() {
-        // adiciona a barra de tarefas na tela
-        Toolbar my_toolbar = findViewById(R.id.my_toolbar_main);
-        setSupportActionBar(my_toolbar);
-        // adiciona a seta de voltar na barra de tarefas
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void btn_ligar_teste(View view) {
-        String tempo_aux = tempo_para_execucao.getText().toString();
-        if(tempo_aux == null || tempo_aux.isEmpty()){
-            ToastUtil.show(this, "Digite a duração do teste!", Toast.LENGTH_SHORT);
-            return;
-        }
-        if(thread_conectada == null){
-            ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
-            return;
-        }
-
-        if(estado.equals("0")) { // ligar
-            estado = alterarEstado(LIGAR_LED);
-            TEMPO_DO_TESTE = Integer.parseInt(tempo_aux);
-            ((Button)findViewById(R.id.btn_ligar)).setText("Teste em andamento..");
-
-            try {
-                InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-
-            ((TextView) findViewById(R.id.teste_status)).setText("Teste em andamento..");
-
-            startTime = System.currentTimeMillis();
-            timerHandler.postDelayed(timerRunnable, 0);
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    finalizarTeste();
-                }
-            }, Integer.parseInt(tempo_aux) * 1000);
-
-            Handler handler2 = new Handler();
-            handler2.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    desligaBuzzy();
-                }
-            }, (Integer.parseInt(tempo_aux) * 1000) + 500);
-
-        }
-    }
-
-    private void desligaBuzzy(){
-        estado = alterarEstado(DESLIGAR_BUZZER);
-        ((Button)findViewById(R.id.btn_ligar)).setText("Executar");
-        estado = alterarEstado(DESLIGAR_LED);
-
-        ((TextView) findViewById(R.id.teste_status)).setText("Teste finalizado!");
-    }
-    private void finalizarTeste(){
-        estado = alterarEstado(LIGAR_BUZZER);
-        ((TextView) findViewById(R.id.teste_status)).setText("Finalizando..");
-
-        timerHandler.removeCallbacks(timerRunnable);
-
-    }
-
-    private String alterarEstado(String novoEstado){
-        if(thread_conectada == null){
-            ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
-        }
-        else{
-            thread_conectada.write(novoEstado.getBytes());
-        }
-
-        return novoEstado;
     }
 }

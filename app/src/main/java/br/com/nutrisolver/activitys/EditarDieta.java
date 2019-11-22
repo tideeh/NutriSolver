@@ -39,11 +39,10 @@ import br.com.nutrisolver.tools.ToastUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class EditarDieta extends AppCompatActivity {
+    private final long TIMEOUT_DB = 30 * 60 * 1000; // ms (MIN * 60 * 100)
     public List<String> ingredientes_nomes = new ArrayList<>();// = new String[] { "Milho", "Farelo de Soja", "Feno" };
-    private final long TIMEOUT_DB = 1 * 60 * 1000; // ms (MIN * 60 * 100)
-
-    private SharedPreferences sharedpreferences;
     Dieta dieta;
+    private SharedPreferences sharedpreferences;
     private String lote_id;
     private String lote_nome;
     private String dieta_ativa_id;

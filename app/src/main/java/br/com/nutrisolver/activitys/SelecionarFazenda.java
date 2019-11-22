@@ -18,17 +18,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.tools.AdapterFazenda;
-import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
@@ -70,21 +65,21 @@ public class SelecionarFazenda extends AppCompatActivity {
         //db.collection("fazendas").whereEqualTo("dono_uid", UserUtil.getCurrentUser().getUid()).get()
         DataBaseUtil.getInstance().getDocumentsWhereEqualTo("fazendas", "dono_uid", UserUtil.getCurrentUser().getUid())
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    adapterFazenda.clear();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        adapterFazenda.addItem(document.toObject(Fazenda.class));
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            adapterFazenda.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                adapterFazenda.addItem(document.toObject(Fazenda.class));
+                            }
+                            progressBar.setVisibility(View.GONE);
+                            Log.i("MY_FIRESTORE", "Sucesso atualiza lista de fazendas");
+                        } else {
+                            Log.i("MY_FIRESTORE", "Error getting documents: " + task.getException());
+                            progressBar.setVisibility(View.GONE);
+                        }
                     }
-                    progressBar.setVisibility(View.GONE);
-                    Log.i("MY_FIRESTORE", "Sucesso atualiza lista de fazendas");
-                } else {
-                    Log.i("MY_FIRESTORE", "Error getting documents: "+task.getException());
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+                });
     }
 
     @Override
@@ -142,7 +137,7 @@ public class SelecionarFazenda extends AppCompatActivity {
         finish();
     }
 
-    private void configura_listView(){
+    private void configura_listView() {
         listView_Fazendas = (ListView) findViewById(R.id.lista_fazendas);
         adapterFazenda = new AdapterFazenda(this);
         listView_Fazendas.setAdapter(adapterFazenda);

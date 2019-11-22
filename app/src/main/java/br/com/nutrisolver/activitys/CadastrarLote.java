@@ -15,8 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.Objects;
 
 import br.com.nutrisolver.R;
@@ -29,7 +27,7 @@ public class CadastrarLote extends AppCompatActivity {
     private SharedPreferences sharedpreferences;
     //private FirebaseFirestore db;
     private EditText input_nome_lote;
-        private ProgressBar progressBar;
+    private ProgressBar progressBar;
     private Lote lote;
     private String fazenda_corrente_id;
 

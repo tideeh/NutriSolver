@@ -2,14 +2,22 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
 
+// aqui configura o version code e o version name
+ext.versionMajor = 1 // altera quando tem um grande releas
+ext.versionMinor = 0 // altera quando tem um release medio (volta pra 0 quando altera o Major)
+ext.versionPatch = 0 // altera em qualquer release (volta pra 0 quando altera o Minor)
+ext.versionClassifier = null // nome da versao
+ext.isBeta = true
+ext.minimumSdkVersion = 19 // altera quando precisar aumentar o min SDK version (novas apis)
+
 android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "br.com.nutrisolver"
-        minSdkVersion 19
+        minSdkVersion project.ext.minimumSdkVersion
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode generateVersionCode()
+        versionName generateVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -19,6 +27,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+private Integer generateVersionCode() {
+    return ext.minimumSdkVersion * 10000000 + ext.versionMajor * 10000 + ext.versionMinor * 100 + ext.versionPatch
+}
+
+private String generateVersionName() {
+    String versionName = "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"
+    if (ext.versionClassifier == null && ext.isBeta) {
+        ext.versionClassifier = "BETA"
+    }
+
+    if (ext.versionClassifier != null) {
+        versionName += "-" + ext.versionClassifier
+    }
+    return versionName;
 }
 
 dependencies {

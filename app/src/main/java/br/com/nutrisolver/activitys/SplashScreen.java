@@ -6,21 +6,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
+import br.com.nutrisolver.BuildConfig;
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.tools.DataBaseUtil;
@@ -38,6 +34,13 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        Log.i("MY_VERSION_CONTROL", "versionCode: " + versionCode);
+        Log.i("MY_VERSION_CONTROL", "versionName: " + versionName);
+
+        ((TextView) findViewById(R.id.splash_version_name)).setText(versionName);
 
         progressBar = findViewById(R.id.progress_bar);
 /*
@@ -72,11 +75,11 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void verificaLogin() {
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
 
 
         if (!UserUtil.isLogged()) {
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
             Intent it = new Intent(this, Login.class);
             startActivity(it);
             finish();
@@ -95,7 +98,7 @@ public class SplashScreen extends AppCompatActivity {
                                 if (fazenda != null) {
                                     Log.i("VERIFICA_FAZ_CORRENTE", "2");
                                     if (fazenda.getDono_uid().equals(UserUtil.getCurrentUser().getUid())) { // ja possui fazenda corrente e eh dele
-                                        progressBar.setVisibility(View.GONE);
+                                        //progressBar.setVisibility(View.GONE);
                                         Log.i("VERIFICA_FAZ_CORRENTE", "3");
                                         startActivity(new Intent(getApplicationContext(), TelaPrincipal.class));
                                         finish();
@@ -104,7 +107,7 @@ public class SplashScreen extends AppCompatActivity {
                                 }
                             }
                             Log.i("VERIFICA_FAZ_CORRENTE", "4");
-                            progressBar.setVisibility(View.GONE);
+                            //progressBar.setVisibility(View.GONE);
 
                             startActivity(new Intent(getApplicationContext(), SelecionarFazenda.class));
                             finish();
