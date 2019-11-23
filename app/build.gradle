@@ -12,8 +12,9 @@ ext.minimumSdkVersion = 19 // altera quando precisar aumentar o min SDK version 
 
 android {
     signingConfigs {
-        debug {
-            storeFile file('C:\\Users\\tideeh\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')
+        release {
+            //storeFile file('C:\\Users\\tideeh\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//PC
+            storeFile file('C:\\Users\\tidee\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//notebook
             storePassword 'AAbb1122'
             keyAlias = 'nutrisolver'
             keyPassword 'AAbb1122'
@@ -28,6 +29,7 @@ android {
         versionName generateVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        signingConfig signingConfigs.release
     }
     buildTypes {
         release {
@@ -59,8 +61,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.firebase:firebase-analytics:17.2.1'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
