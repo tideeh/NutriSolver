@@ -6,7 +6,8 @@
     android:background="@android:color/white"
     android:fillViewport="true"
     android:orientation="vertical"
-    tools:context=".tools.SideBar">
+    tools:context=".tools.SideBar"
+    android:id="@+id/nav_view">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,20 +47,21 @@
         <!-- lista de menus -->
 
         <LinearLayout
-            android:id="@+id/navigation_executar_teste"
+            android:id="@+id/navigation_executar_teste_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
+                android:onClick="sidebar_testar_amostra"
+                android:id="@+id/navigation_executar_teste"
                 android:background="@drawable/ripple_efect_menu_lateral"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="horizontal"
-                android:padding="10dp"
-                android:onClick="menu_lateral_testar_amostra">
+                android:padding="10dp">
 
                 <ImageView
                     android:layout_width="40dp"
@@ -78,9 +80,8 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -114,9 +115,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -150,9 +149,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -186,9 +183,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -222,9 +217,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -258,9 +251,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -294,9 +285,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
         </LinearLayout>
 
         <LinearLayout
@@ -330,9 +319,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e5e5e5" />
+                style="@style/divider_horizontal_sidebar"/>
         </LinearLayout>
 
     </LinearLayout>

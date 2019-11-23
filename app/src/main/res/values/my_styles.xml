@@ -66,4 +66,16 @@
         <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
     </style>
 
+    <style name="divider_horizontal_toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.1dp</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+    <style name="divider_horizontal_sidebar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">#e5e5e5</item>
+    </style>
+
 </resources>

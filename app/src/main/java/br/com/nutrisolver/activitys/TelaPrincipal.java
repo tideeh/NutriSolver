@@ -25,6 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -156,6 +157,9 @@ public class TelaPrincipal extends AppCompatActivity {
                 mDrawerToggle.syncState();
             }
         });
+
+        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -315,7 +319,7 @@ public class TelaPrincipal extends AppCompatActivity {
         });
     }
 
-    public void menu_lateral_testar_amostra(View v) {
-        startActivity(new Intent(this, ExecutarTeste1.class));
+    public void sidebar_testar_amostra(View v) {
+       startActivity(new Intent(this, ExecutarTeste1.class));
     }
 }
