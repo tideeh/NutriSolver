@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,6 +61,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
     private String estado = "0";
     private EditText tempo_para_execucao;
     private int TEMPO_DO_TESTE = 10;
+    private SharedPreferences sharedpreferences;
     Runnable timerRunnable = new Runnable() {
 
         @Override
@@ -84,6 +87,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
         tempo_para_execucao = findViewById(R.id.tempo_para_execucao);
         textView_bt_read = findViewById(R.id.leitura_bluetooth_debug);
         textView_bt_send = findViewById(R.id.envio_bluetooth_debug);
+        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -152,6 +156,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
     }
 
     private void check_bt_connection() {
+        device_mac_address = sharedpreferences.getString("device_mac_address", null);
         Log.i("MY_BLUETOOTH", "check_bt: " + device_mac_address);
         if (device_mac_address == null) { // inicia a activity para conectar em um dispositovo
             startActivityForResult(new Intent(this, ListaDispositivosBT.class), CONECTAR_DISPOSITIVO_REQUEST);
@@ -186,6 +191,12 @@ public class ExecutarTeste1 extends AppCompatActivity {
         if (requestCode == CONECTAR_DISPOSITIVO_REQUEST) {
             if (resultCode == RESULT_OK) {
                 device_mac_address = data.getStringExtra("device_mac_address");
+
+                // salva para usar futuramente (evita ficar selecionando o dispositivo toda hora)
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("device_mac_address", device_mac_address);
+                editor.apply();
+
                 Log.i("MY_BLUETOOTH", "act result: " + device_mac_address);
             } else {
                 ToastUtil.show(this, "Falha ao selecionar um dispositivo", Toast.LENGTH_LONG);
@@ -222,7 +233,12 @@ public class ExecutarTeste1 extends AppCompatActivity {
             ToastUtil.show(this, "Digite a duração do teste!", Toast.LENGTH_SHORT);
             return;
         }
-        if (thread_conectada == null) {
+
+        if (bt_socket == null) {
+            ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
+            return;
+        }
+        if (!bt_socket.isConnected()) { // ja esta conectado
             ToastUtil.show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT);
             return;
         }
@@ -341,7 +357,9 @@ public class ExecutarTeste1 extends AppCompatActivity {
                     public void run() {
                         progressBar.setVisibility(View.GONE);
                         ToastUtil.show(ExecutarTeste1.this, "Falha ao conectar no dispositivo", Toast.LENGTH_LONG);
-                        finish();
+                        sharedpreferences.edit().remove("device_mac_address").apply();
+                        startActivityForResult(new Intent(ExecutarTeste1.this, ListaDispositivosBT.class), CONECTAR_DISPOSITIVO_REQUEST);
+                        //finish();
                     }
                 });
 
