@@ -109,7 +109,7 @@ public class SplashScreen extends AppCompatActivity {
                                     if (fazenda.getDono_uid().equals(UserUtil.getCurrentUser().getUid())) { // ja possui fazenda corrente e eh dele
                                         //progressBar.setVisibility(View.GONE);
                                         Log.i("VERIFICA_FAZ_CORRENTE", "3");
-                                        startActivity(new Intent(getApplicationContext(), TelaPrincipal.class));
+                                        startActivity(new Intent(getApplicationContext(), NovaMainActivity.class));
                                         finish();
                                         return;
                                     }

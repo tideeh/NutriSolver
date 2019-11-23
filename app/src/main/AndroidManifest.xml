@@ -14,11 +14,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/nutrisolver_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:testOnly="false">
-        <activity android:name=".activitys.ListaDispositivosBT">
-
-        </activity>
+        android:testOnly="false"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activitys.NovaMainActivity"></activity>
+        <activity android:name=".activitys.ListaDispositivosBT"></activity>
         <activity android:name=".activitys.ExecutarTeste1" />
         <activity android:name=".activitys.EditarDieta" />
         <activity android:name=".activitys.VisualizaLote" />

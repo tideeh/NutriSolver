@@ -39,4 +39,7 @@
 
     <string name="com.crashlytics.useFirebaseAppId" tools:ignore="ExtraTranslation">true</string>
     <string name="selecione_o_dispositivo_para_conexao_bluetooth">Selecione o dispositivo para conexão Bluetooth</string>
+    <string name="tab1_title">Lotes</string>
+    <string name="tab2_title">Dietas</string>
+    <string name="tab3_title">Testes</string>
 </resources>

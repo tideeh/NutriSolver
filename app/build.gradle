@@ -14,7 +14,8 @@ android {
     signingConfigs {
         release {
             //storeFile file('C:\\Users\\tideeh\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//PC
-            storeFile file('C:\\Users\\tidee\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//notebook
+            storeFile file('C:\\Users\\tidee\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')
+//notebook
             storePassword 'AAbb1122'
             keyAlias = 'nutrisolver'
             keyPassword 'AAbb1122'
@@ -80,6 +81,7 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.0-SNAPSHOT@aar') {
         transitive = true;
     }
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
