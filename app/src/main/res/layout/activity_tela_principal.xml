@@ -20,6 +20,11 @@
                 android:id="@+id/my_toolbar_main"
                 layout="@layout/barra_tarefas" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.01dp"
+                android:background="@android:color/black"/>
+
             <TextView
                 style="@style/texto_cabecalho"
                 android:text="@string/lotes" />
