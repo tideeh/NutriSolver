@@ -341,6 +341,14 @@ public class ExecutarTeste1 extends AppCompatActivity {
             try {
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
+
+                ExecutarTeste1.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((TextView)findViewById(R.id.status_bluetooth_debug)).setText("Status: conectando..");
+                    }
+                });
+
                 bt_socket.connect();
             } catch (IOException connectException) {
                 Log.e("MY_BLUETOOTH", "Unable to connect", connectException);
@@ -359,6 +367,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
                         ToastUtil.show(ExecutarTeste1.this, "Falha ao conectar no dispositivo", Toast.LENGTH_LONG);
                         sharedpreferences.edit().remove("device_mac_address").apply();
                         startActivityForResult(new Intent(ExecutarTeste1.this, ListaDispositivosBT.class), CONECTAR_DISPOSITIVO_REQUEST);
+                        ((TextView)findViewById(R.id.status_bluetooth_debug)).setText("Status: desconectado");
                         //finish();
                     }
                 });
@@ -370,6 +379,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
                 @Override
                 public void run() {
                     progressBar.setVisibility(View.GONE);
+                    ((TextView)findViewById(R.id.status_bluetooth_debug)).setText("Status: conectado");
                 }
             });
 
@@ -436,6 +446,7 @@ public class ExecutarTeste1 extends AppCompatActivity {
                     ExecutarTeste1.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            ((TextView)findViewById(R.id.status_bluetooth_debug)).setText("Status: desconectado");
                             ToastUtil.show(ExecutarTeste1.this, "Input stream desconectado", Toast.LENGTH_LONG);
                         }
                     });
