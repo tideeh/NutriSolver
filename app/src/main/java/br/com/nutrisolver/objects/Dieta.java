@@ -13,12 +13,25 @@ public class Dieta implements Serializable {
     private String id = UUID.randomUUID().toString();
     private boolean ativo = true;
     private String data_criacao = sdf.format(new Timestamp(System.currentTimeMillis()));
+    private String nome = "";
     private String lote_id = "";
+    private String fazenda_id = "";
     private List<String> ingredientes_nomes = new ArrayList<>(); // tambem serve como DocumentReference pois o id do ingrediente eh o seu nome
 
     public Dieta(){}
 
-    public Dieta(String lote_id){
+    public Dieta(String fazenda_id){
+        this.fazenda_id = fazenda_id;
+    }
+
+    public Dieta(String fazenda_id, String lote_id){
+        this.fazenda_id = fazenda_id;
+        this.lote_id = lote_id;
+    }
+
+    public Dieta(String nome, String fazenda_id, String lote_id){
+        this.nome = nome;
+        this.fazenda_id = fazenda_id;
         this.lote_id = lote_id;
     }
 
@@ -63,5 +76,21 @@ public class Dieta implements Serializable {
 
     public void setLote_id(String lote_id) {
         this.lote_id = lote_id;
+    }
+
+    public String getFazenda_id() {
+        return fazenda_id;
+    }
+
+    public void setFazenda_id(String fazenda_id) {
+        this.fazenda_id = fazenda_id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

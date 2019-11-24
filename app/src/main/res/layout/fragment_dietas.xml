@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitys.LotesFragment">
+    tools:context=".activitys.DietasFragment">
 
     <ListView
-        android:id="@+id/lista_lotes"
+        android:id="@+id/lista_dietas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_cadastrar_lote"
+        android:id="@+id/fab_cadastrar_dieta"
         style="@style/floating_button_add" />
 
 </FrameLayout>

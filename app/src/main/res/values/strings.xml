@@ -42,4 +42,5 @@
     <string name="tab1_title">Lotes</string>
     <string name="tab2_title">Dietas</string>
     <string name="tab3_title">Testes</string>
+    <string name="nome_da_dieta">Nome da Dieta</string>
 </resources>

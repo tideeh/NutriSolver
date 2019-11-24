@@ -1,5 +1,9 @@
 package br.com.nutrisolver.activitys;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,17 +12,13 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,12 +35,12 @@ import br.com.nutrisolver.objects.Dieta;
 import br.com.nutrisolver.objects.Ingrediente;
 import br.com.nutrisolver.tools.AdapterIngredienteNome;
 import br.com.nutrisolver.tools.DataBaseUtil;
+import br.com.nutrisolver.tools.MyApplication;
 import br.com.nutrisolver.tools.ToastUtil;
-import br.com.nutrisolver.tools.UserUtil;
 
-public class EditarDieta extends AppCompatActivity {
+public class CadastrarDieta extends AppCompatActivity {
     private final long TIMEOUT_DB = 30 * 60 * 1000; // ms (MIN * 60 * 100)
-    public List<String> ingredientes_nomes = new ArrayList<>();// = new String[] { "Milho", "Farelo de Soja", "Feno" };
+    public List<String> ingredientes_nomes = new ArrayList<>();
     Dieta dieta;
     private SharedPreferences sharedpreferences;
     private String lote_id;
@@ -48,25 +48,19 @@ public class EditarDieta extends AppCompatActivity {
     private String dieta_ativa_id;
     private ProgressBar progressBar;
     private ListView listView_editar_ingredientes;
+    private EditText input_nome_dieta;
+    private MyApplication myApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editar_dieta);
+        setContentView(R.layout.activity_cadastrar_dieta);
 
+        myApplication = ((MyApplication)getApplication());
 
+        input_nome_dieta = findViewById(R.id.cadastrar_nome_da_dieta);
         progressBar = findViewById(R.id.progress_bar);
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-
-        Intent it = getIntent();
-        lote_id = it.getStringExtra("lote_id");
-        lote_nome = it.getStringExtra("lote_nome");
-        dieta_ativa_id = it.getStringExtra("dieta_ativa_id");
-
-        if (lote_id == null || lote_nome == null) {
-            startActivity(new Intent(this, TelaPrincipal.class));
-            finish();
-        }
 
         configura_listView();
 
@@ -120,24 +114,13 @@ public class EditarDieta extends AppCompatActivity {
                                 editor.putLong("ingredientes_nomes_last_update", System.currentTimeMillis());
                                 editor.apply();
                             }
-                            AdapterIngredienteNome itemsAdapter = new AdapterIngredienteNome(EditarDieta.this, ingredientes_nomes);
+                            AdapterIngredienteNome itemsAdapter = new AdapterIngredienteNome(CadastrarDieta.this, ingredientes_nomes);
                             listView_editar_ingredientes.setAdapter(itemsAdapter);
 
                             progressBar.setVisibility(View.GONE);
                         }
                     });
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (!UserUtil.isLogged()) {
-            startActivity(new Intent(this, Login.class));
-            finish();
-        }
-
     }
 
     private void configura_toolbar() {
@@ -148,19 +131,16 @@ public class EditarDieta extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().setTitle("Lote: " + lote_nome);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
+    protected void onStart() {
+        super.onStart();
 
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        String faz_nome = getIntent().getStringExtra("faz_corrente_nome");
+        if (faz_nome == null)
+            faz_nome = " ";
+        getSupportActionBar().setTitle("Fazenda: " + faz_nome);
     }
 
     public void salvar_dieta(View view) {
@@ -169,9 +149,14 @@ public class EditarDieta extends AppCompatActivity {
             return;
         }
 
+        if (!validaDados()) {
+            return;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
 
-        dieta = new Dieta(lote_id);
+        dieta = new Dieta(myApplication.getFazenda_corrente().getId());
+        dieta.setNome(input_nome_dieta.getText().toString());
 
         int len = listView_editar_ingredientes.getCount();
         SparseBooleanArray checked = listView_editar_ingredientes.getCheckedItemPositions();
@@ -184,10 +169,10 @@ public class EditarDieta extends AppCompatActivity {
         }
 
         // desativa a dieta anterior
-        if (dieta_ativa_id != null) {
-            Log.i("MY_FIRESTORE", " " + dieta_ativa_id);
-            DataBaseUtil.getInstance().updateDocument("dietas", dieta_ativa_id, "ativo", false);
-        }
+        //if (dieta_ativa_id != null) {
+        //    Log.i("MY_FIRESTORE", " " + dieta_ativa_id);
+        //    DataBaseUtil.getInstance().updateDocument("dietas", dieta_ativa_id, "ativo", false);
+        //}
 
         // salva a nova dieta
         DataBaseUtil.getInstance().insertDocument("dietas", dieta.getId(), dieta);
@@ -205,18 +190,28 @@ public class EditarDieta extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
 
         Intent it = new Intent();
-        it.putExtra("dieta_editada", dieta);
+        it.putExtra("dieta_cadastrada", dieta);
         setResult(1, it);
 
         finish();
     }
 
-    public void cancelar(View view) {
-        finish();
+    private boolean validaDados() {
+        boolean valido = true;
+
+        String nome_dieta = input_nome_dieta.getText().toString();
+        if (TextUtils.isEmpty(nome_dieta)) {
+            input_nome_dieta.setError("Campo necessário.");
+            valido = false;
+        } else {
+            input_nome_dieta.setError(null);
+        }
+
+        return valido;
     }
 
     private void configura_listView() {
-        listView_editar_ingredientes = findViewById(R.id.listView_editar_ingredientes);
+        listView_editar_ingredientes = findViewById(R.id.listView_cadastrar_dieta);
         listView_editar_ingredientes.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         listView_editar_ingredientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
