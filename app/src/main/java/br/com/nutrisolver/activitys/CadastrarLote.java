@@ -20,7 +20,6 @@ import java.util.Objects;
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.DataBaseUtil;
-import br.com.nutrisolver.tools.MyApplication;
 import br.com.nutrisolver.tools.ToastUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
@@ -31,17 +30,18 @@ public class CadastrarLote extends AppCompatActivity {
     private ProgressBar progressBar;
     private Lote lote;
     private String fazenda_corrente_id;
-    private MyApplication myApplication;
+    private String fazenda_corrente_nome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_lote);
 
-        myApplication = ((MyApplication)getApplication());
-
         //db = FirebaseFirestore.getInstance();
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
+        fazenda_corrente_nome = sharedpreferences.getString("fazenda_corrente_nome", "-1");
+
         input_nome_lote = findViewById(R.id.cadastrar_nome_do_lote);
         progressBar = findViewById(R.id.progress_bar);
 
@@ -55,6 +55,8 @@ public class CadastrarLote extends AppCompatActivity {
         // adiciona a seta de voltar na barra de tarefas
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getSupportActionBar().setTitle("Fazenda: " + fazenda_corrente_nome);
     }
 
     @Override
@@ -65,13 +67,6 @@ public class CadastrarLote extends AppCompatActivity {
             startActivity(new Intent(this, Login.class));
             finish();
         }
-
-        fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1"); // getting String
-
-        String faz_nome = getIntent().getStringExtra("faz_corrente_nome");
-        if (faz_nome == null)
-            faz_nome = " ";
-        getSupportActionBar().setTitle("Fazenda: " + faz_nome);
     }
 
     @Override
@@ -95,9 +90,8 @@ public class CadastrarLote extends AppCompatActivity {
 
         String nome_lote = input_nome_lote.getText().toString();
 
-        lote = new Lote(nome_lote, myApplication.getFazenda_corrente().getId());
+        lote = new Lote(nome_lote, fazenda_corrente_id);
 
-        //db.collection("lotes").document(lote.getId()).set(lote);
         DataBaseUtil.getInstance().insertDocument("lotes", lote.getId(), lote);
 
         Handler handler = new Handler();

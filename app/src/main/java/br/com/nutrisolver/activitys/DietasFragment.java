@@ -2,9 +2,10 @@ package br.com.nutrisolver.activitys;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -14,25 +15,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
-import java.util.Objects;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
 import br.com.nutrisolver.objects.Fazenda;
-import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.AdapterDieta;
-import br.com.nutrisolver.tools.AdapterDietaAtual;
-import br.com.nutrisolver.tools.AdapterLote;
-import br.com.nutrisolver.tools.MyApplication;
+import br.com.nutrisolver.tools.DataBaseUtil;
 
-public class DietasFragment extends Fragment {
+public class DietasFragment extends Fragment implements NovaMainActivity.DataFromActivityToFragment {
     private View v;
     private ListView listView_dietas;
     private AdapterDieta adapterDieta = null;
-    private MyApplication myApplication;
     Fazenda fazenda;
     private static final int CADASTRAR_DIETA_REQUEST = 1001;
+
+    private ProgressBar progressBar;
+    private SharedPreferences sharedpreferences;
+    private String fazenda_corrente_id;
 
     public DietasFragment() {
         Log.i("MY_TABS", "DietasFragment criado");
@@ -40,26 +45,48 @@ public class DietasFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("MY_TABS", "DietasFragment onCreateView");
         v = inflater.inflate(R.layout.fragment_dietas, container, false);
 
-        myApplication = ((MyApplication) Objects.requireNonNull(getActivity()).getApplication());
+        sharedpreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
+        progressBar = v.findViewById(R.id.progress_bar);
 
-        fazenda = myApplication.getFazenda_corrente();
+        configura_listView();
+        atualiza_lista_de_dietas();
 
         v.findViewById(R.id.fab_cadastrar_dieta).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), CadastrarDieta.class);
-                if (fazenda != null)
-                    it.putExtra("faz_corrente_nome", fazenda.getNome());
-
                 startActivityForResult(it, CADASTRAR_DIETA_REQUEST);
             }
         });
 
-        configura_listView();
-
         return v;
+    }
+
+    private void atualiza_lista_de_dietas() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("dietas", new String[]{"fazenda_id", "ativo"}, new Object[]{fazenda_corrente_id, true})
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            adapterDieta.clear();
+                            if(task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    adapterDieta.addItem(document.toObject(Dieta.class));
+                                }
+                            }
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            Log.i("MY_FIRESTORE", "Error getting documents: " + task.getException());
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -76,7 +103,7 @@ public class DietasFragment extends Fragment {
 
     private void configura_listView() {
         listView_dietas = (ListView) v.findViewById(R.id.lista_dietas);
-        adapterDieta = new AdapterDieta(myApplication.getDietas(), getActivity());
+        adapterDieta = new AdapterDieta(getActivity());
         listView_dietas.setAdapter(adapterDieta);
         listView_dietas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -88,5 +115,18 @@ public class DietasFragment extends Fragment {
                 //startActivity(it);
             }
         });
+    }
+
+    @Override
+    public void sendData(String data) {
+        switch (data){
+            case "atualiza_dietas":
+                fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
+                atualiza_lista_de_dietas();
+                break;
+
+            default:
+                break;
+        }
     }
 }

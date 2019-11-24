@@ -147,6 +147,7 @@ public class SelecionarFazenda extends AppCompatActivity {
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString("fazenda_corrente_id", adapterFazenda.getItemIdString(position));
+                editor.putString("fazenda_corrente_nome", ((Fazenda)adapterFazenda.getItem(position)).getNome());
                 editor.apply();
 
                 Intent it = new Intent(view.getContext(), TelaPrincipal.class);

@@ -14,4 +14,9 @@
         android:id="@+id/fab_cadastrar_lote"
         style="@style/floating_button_add" />
 
+    <ProgressBar
+        style="@style/my_progress_bar"
+        android:id="@+id/progress_bar"
+        android:visibility="gone"/>
+
 </FrameLayout>

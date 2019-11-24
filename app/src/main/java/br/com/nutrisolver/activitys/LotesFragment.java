@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,56 +21,78 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Objects;
-
 import br.com.nutrisolver.R;
-import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.DataBaseUtil;
-import br.com.nutrisolver.tools.FazendaUtil;
-import br.com.nutrisolver.tools.MyApplication;
 
-public class LotesFragment extends Fragment {
+public class LotesFragment extends Fragment implements NovaMainActivity.DataFromActivityToFragment {
     private View v;
     private ListView listView_lotes;
     private AdapterLote adapterLote = null;
-    private MyApplication myApplication;
-    Fazenda fazenda;
+
+    private SharedPreferences sharedpreferences;
+    private String fazenda_corrente_id;
+
     private static final int CADASTRAR_LOTE_REQUEST = 1001;
+
+    private ProgressBar progressBar;
 
     public LotesFragment() {
         Log.i("MY_TABS", "LotesFragment criado");
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i("MY_TABS", "LotesFragment onCreate");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        Log.i("MY_TABS", "LotesFragment onCreateView");
         v = inflater.inflate(R.layout.fragment_lotes, container, false);
 
-        myApplication = ((MyApplication) Objects.requireNonNull(getActivity()).getApplication());
+        sharedpreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
+        progressBar = v.findViewById(R.id.progress_bar);
 
-        fazenda = myApplication.getFazenda_corrente();
+        configura_listView();
+        atualiza_lista_de_lotes();
 
         v.findViewById(R.id.fab_cadastrar_lote).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), CadastrarLote.class);
-                if (fazenda != null)
-                    it.putExtra("faz_corrente_nome", fazenda.getNome());
-
                 startActivityForResult(it, CADASTRAR_LOTE_REQUEST);
             }
         });
 
-        configura_listView();
-
         return v;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void atualiza_lista_de_lotes() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("lotes", "fazenda_id", fazenda_corrente_id)
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            adapterLote.clear();
+                            if(task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    adapterLote.addItem(document.toObject(Lote.class));
+                                    Log.i("MY_FIRESTORE", "lotes do db: " + document.toObject(Lote.class).getNome());
+                                }
+                            }
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            Log.i("MY_FIRESTORE", "Error getting documents: " + task.getException());
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -87,7 +109,7 @@ public class LotesFragment extends Fragment {
 
     private void configura_listView() {
         listView_lotes = (ListView) v.findViewById(R.id.lista_lotes);
-        adapterLote = new AdapterLote(myApplication.getLotes(), getActivity());
+        adapterLote = new AdapterLote(getActivity());
         listView_lotes.setAdapter(adapterLote);
         listView_lotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -101,4 +123,18 @@ public class LotesFragment extends Fragment {
         });
     }
 
+    @Override
+    public void sendData(String data) {
+        switch (data){
+            case "atualiza_lotes":
+                Log.i("MY_SENDDATA", "atualiza_lotes");
+                sharedpreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+                fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
+                atualiza_lista_de_lotes();
+                break;
+
+            default:
+                break;
+        }
+    }
 }

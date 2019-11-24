@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import br.com.nutrisolver.R;
 
-public class TestesFragment extends Fragment {
+public class TestesFragment extends Fragment implements NovaMainActivity.DataFromActivityToFragment {
 
     public TestesFragment() {
         Log.i("MY_TABS", "TestesFragment criado");
@@ -25,4 +25,8 @@ public class TestesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_testes, container, false);
     }
 
+    @Override
+    public void sendData(String data) {
+
+    }
 }

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AbsListView;
@@ -35,7 +34,6 @@ import br.com.nutrisolver.objects.Dieta;
 import br.com.nutrisolver.objects.Ingrediente;
 import br.com.nutrisolver.tools.AdapterIngredienteNome;
 import br.com.nutrisolver.tools.DataBaseUtil;
-import br.com.nutrisolver.tools.MyApplication;
 import br.com.nutrisolver.tools.ToastUtil;
 
 public class CadastrarDieta extends AppCompatActivity {
@@ -49,21 +47,21 @@ public class CadastrarDieta extends AppCompatActivity {
     private ProgressBar progressBar;
     private ListView listView_editar_ingredientes;
     private EditText input_nome_dieta;
-    private MyApplication myApplication;
+    private String fazenda_corrente_id;
+    private String fazenda_corrente_nome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_dieta);
 
-        myApplication = ((MyApplication)getApplication());
-
         input_nome_dieta = findViewById(R.id.cadastrar_nome_da_dieta);
         progressBar = findViewById(R.id.progress_bar);
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
+        fazenda_corrente_nome = sharedpreferences.getString("fazenda_corrente_nome", "-1");
 
         configura_listView();
-
         atualiza_lista_ingredientes();
         configura_toolbar();
     }
@@ -131,6 +129,7 @@ public class CadastrarDieta extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getSupportActionBar().setTitle("Fazenda: " + fazenda_corrente_nome);
     }
 
     @Override
@@ -155,7 +154,7 @@ public class CadastrarDieta extends AppCompatActivity {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        dieta = new Dieta(myApplication.getFazenda_corrente().getId());
+        dieta = new Dieta(fazenda_corrente_id);
         dieta.setNome(input_nome_dieta.getText().toString());
 
         int len = listView_editar_ingredientes.getCount();
