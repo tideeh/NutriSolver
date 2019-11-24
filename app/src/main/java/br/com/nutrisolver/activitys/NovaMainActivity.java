@@ -310,4 +310,8 @@ public class NovaMainActivity extends AppCompatActivity {
     public interface DataFromActivityToFragment {
         void sendData(String data);
     }
+
+    public void sidebar_testar_amostra(View v) {
+        startActivity(new Intent(this, ExecutarTeste1.class));
+    }
 }
