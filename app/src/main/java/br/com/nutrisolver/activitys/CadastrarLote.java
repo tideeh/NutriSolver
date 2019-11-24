@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import br.com.nutrisolver.R;

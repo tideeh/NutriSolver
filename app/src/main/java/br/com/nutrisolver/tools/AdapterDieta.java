@@ -11,9 +11,10 @@ import java.util.List;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
+import br.com.nutrisolver.objects.Lote;
 
 public class AdapterDieta extends BaseAdapter {
-    private final List<Dieta> list_items;
+    private final ArrayList<Dieta> list_items;
     private final Activity act;
 
     public AdapterDieta(Activity act){
@@ -21,7 +22,7 @@ public class AdapterDieta extends BaseAdapter {
         this.act = act;
     }
 
-    public AdapterDieta(List<Dieta> list_items, Activity act) {
+    public AdapterDieta(ArrayList<Dieta> list_items, Activity act) {
         if(list_items == null)
             this.list_items = new ArrayList<>();
         else
@@ -76,5 +77,9 @@ public class AdapterDieta extends BaseAdapter {
     public void clear(){
         list_items.clear();
         this.notifyDataSetChanged();
+    }
+
+    public ArrayList<Dieta> getList_items() {
+        return list_items;
     }
 }

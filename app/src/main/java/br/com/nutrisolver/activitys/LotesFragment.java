@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.AdapterLote;
@@ -30,6 +32,7 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
     private View v;
     private ListView listView_lotes;
     private AdapterLote adapterLote = null;
+    private ArrayList<Lote> lista_lotes;
 
     private SharedPreferences sharedpreferences;
     private String fazenda_corrente_id;
@@ -37,6 +40,7 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
     private static final int CADASTRAR_LOTE_REQUEST = 1001;
 
     private ProgressBar progressBar;
+    private boolean from_onSaveInstanceState = false;
 
     public LotesFragment() {
         Log.i("MY_TABS", "LotesFragment criado");
@@ -52,6 +56,13 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("MY_TABS", "LotesFragment onCreateView");
         v = inflater.inflate(R.layout.fragment_lotes, container, false);
+
+        from_onSaveInstanceState = false;
+        lista_lotes = null;
+        if(savedInstanceState != null){
+            lista_lotes = savedInstanceState.getParcelableArrayList("lista_lotes");
+            from_onSaveInstanceState = savedInstanceState.getBoolean("from_onSaveInstanceState");
+        }
 
         sharedpreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
@@ -71,28 +82,46 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
         return v;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList("lista_lotes", adapterLote.getList_items());
+        outState.putBoolean("from_onSaveInstanceState", true);
+    }
+
     private void atualiza_lista_de_lotes() {
         progressBar.setVisibility(View.VISIBLE);
 
-        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("lotes", "fazenda_id", fazenda_corrente_id)
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            adapterLote.clear();
-                            if(task.getResult() != null) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    adapterLote.addItem(document.toObject(Lote.class));
-                                    Log.i("MY_FIRESTORE", "lotes do db: " + document.toObject(Lote.class).getNome());
+        if(from_onSaveInstanceState){
+            from_onSaveInstanceState = false;
+            Log.i("MY_SAVED", "lotes vieram do saved!");
+            for(Lote lote : lista_lotes){
+                adapterLote.addItem(lote);
+            }
+            progressBar.setVisibility(View.GONE);
+        }
+        else {
+            DataBaseUtil.getInstance().getDocumentsWhereEqualTo("lotes", "fazenda_id", fazenda_corrente_id)
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                adapterLote.clear();
+                                if (task.getResult() != null) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        adapterLote.addItem(document.toObject(Lote.class));
+                                        Log.i("MY_FIRESTORE", "lotes do db: " + document.toObject(Lote.class).getNome());
+                                    }
                                 }
+                                progressBar.setVisibility(View.GONE);
+                            } else {
+                                Log.i("MY_FIRESTORE", "Error getting documents: " + task.getException());
+                                progressBar.setVisibility(View.GONE);
                             }
-                            progressBar.setVisibility(View.GONE);
-                        } else {
-                            Log.i("MY_FIRESTORE", "Error getting documents: " + task.getException());
-                            progressBar.setVisibility(View.GONE);
                         }
-                    }
-                });
+                    });
+        }
     }
 
     @Override

@@ -150,7 +150,7 @@ public class SelecionarFazenda extends AppCompatActivity {
                 editor.putString("fazenda_corrente_nome", ((Fazenda)adapterFazenda.getItem(position)).getNome());
                 editor.apply();
 
-                Intent it = new Intent(view.getContext(), TelaPrincipal.class);
+                Intent it = new Intent(view.getContext(), NovaMainActivity.class);
                 startActivity(it);
                 finish();
             }

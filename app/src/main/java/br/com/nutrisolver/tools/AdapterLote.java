@@ -14,7 +14,7 @@ import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Lote;
 
 public class AdapterLote extends BaseAdapter {
-    private final List<Lote> list_items;
+    private final ArrayList<Lote> list_items;
     private final Activity act;
 
     public AdapterLote(Activity act){
@@ -22,7 +22,7 @@ public class AdapterLote extends BaseAdapter {
         this.act = act;
     }
 
-    public AdapterLote(List<Lote> list_items, Activity act) {
+    public AdapterLote(ArrayList<Lote> list_items, Activity act) {
         if(list_items == null)
             this.list_items = new ArrayList<>();
         else
@@ -77,5 +77,9 @@ public class AdapterLote extends BaseAdapter {
     public void clear(){
         list_items.clear();
         this.notifyDataSetChanged();
+    }
+
+    public ArrayList<Lote> getList_items() {
+        return list_items;
     }
 }

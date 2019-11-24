@@ -1,12 +1,15 @@
 package br.com.nutrisolver.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
-public class Lote implements Serializable {
+public class Lote implements Parcelable {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
     private String id = UUID.randomUUID().toString();
@@ -24,6 +27,25 @@ public class Lote implements Serializable {
         this.nome = nome;
         this.fazenda_id = fazenda_id;
     }
+
+    protected Lote(Parcel in) {
+        id = in.readString();
+        nome = in.readString();
+        data_criacao = in.readString();
+        fazenda_id = in.readString();
+    }
+
+    public static final Creator<Lote> CREATOR = new Creator<Lote>() {
+        @Override
+        public Lote createFromParcel(Parcel in) {
+            return new Lote(in);
+        }
+
+        @Override
+        public Lote[] newArray(int size) {
+            return new Lote[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -51,5 +73,18 @@ public class Lote implements Serializable {
 
     public void setFazenda_id(String fazenda_id) {
         this.fazenda_id = fazenda_id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(nome);
+        dest.writeString(data_criacao);
+        dest.writeString(fazenda_id);
     }
 }

@@ -1,5 +1,8 @@
 package br.com.nutrisolver.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -7,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Dieta implements Serializable {
+public class Dieta implements Parcelable {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
     private String id = UUID.randomUUID().toString();
@@ -34,6 +37,28 @@ public class Dieta implements Serializable {
         this.fazenda_id = fazenda_id;
         this.lote_id = lote_id;
     }
+
+    protected Dieta(Parcel in) {
+        id = in.readString();
+        ativo = in.readByte() != 0;
+        data_criacao = in.readString();
+        nome = in.readString();
+        lote_id = in.readString();
+        fazenda_id = in.readString();
+        ingredientes_nomes = in.createStringArrayList();
+    }
+
+    public static final Creator<Dieta> CREATOR = new Creator<Dieta>() {
+        @Override
+        public Dieta createFromParcel(Parcel in) {
+            return new Dieta(in);
+        }
+
+        @Override
+        public Dieta[] newArray(int size) {
+            return new Dieta[size];
+        }
+    };
 
     public List<String> getIngredientes_nomes() {
         return ingredientes_nomes;
@@ -92,5 +117,21 @@ public class Dieta implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeByte((byte) (ativo ? 1 : 0));
+        dest.writeString(data_criacao);
+        dest.writeString(nome);
+        dest.writeString(lote_id);
+        dest.writeString(fazenda_id);
+        dest.writeStringList(ingredientes_nomes);
     }
 }

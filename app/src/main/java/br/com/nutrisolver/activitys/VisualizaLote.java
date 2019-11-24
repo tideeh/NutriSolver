@@ -135,7 +135,7 @@ public class VisualizaLote extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == EDITAR_DIETA_REQUEST && resultCode == 1) { // foi editado uma nova dieta, atualiza a lista com os ingredientes_nomes
-            Dieta d = (Dieta) data.getSerializableExtra("dieta_editada");
+            Dieta d = (Dieta) data.getParcelableExtra("dieta_editada");
             ingredientes_nomes = d.getIngredientes_nomes();
 
             AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(this, ingredientes_nomes);

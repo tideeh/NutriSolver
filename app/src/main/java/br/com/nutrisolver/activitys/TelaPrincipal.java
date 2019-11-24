@@ -296,7 +296,7 @@ public class TelaPrincipal extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CADASTRAR_LOTE_REQUEST && resultCode == 1) { // foi cadastrado um lote novo, adiciona ele na lista de lotes e atualizar o adapter da listView
-            Lote l = (Lote) data.getSerializableExtra("lote_cadastrado");
+            Lote l = (Lote) data.getParcelableExtra("lote_cadastrado");
             Log.i("MY_ACTIVITY_RESULT", "lote nome: " + l.getNome());
 
             adapterLote.addItem(l);
