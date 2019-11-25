@@ -29,7 +29,7 @@ import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.DataBaseUtil;
 
 public class LotesFragment extends Fragment implements NovaMainActivity.DataFromActivityToFragment {
-    private View v;
+    private View view;
     private ListView listView_lotes;
     private AdapterLote adapterLote = null;
     private ArrayList<Lote> lista_lotes;
@@ -55,7 +55,15 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("MY_TABS", "LotesFragment onCreateView");
-        v = inflater.inflate(R.layout.fragment_lotes, container, false);
+        return inflater.inflate(R.layout.fragment_lotes, container, false);
+    }
+
+    // aqui a view ja esta criada e nao tem risco de nullpoint
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        this.view = view;
 
         from_onSaveInstanceState = false;
         lista_lotes = null;
@@ -66,20 +74,18 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
 
         sharedpreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
-        progressBar = v.findViewById(R.id.progress_bar);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         configura_listView();
         atualiza_lista_de_lotes();
 
-        v.findViewById(R.id.fab_cadastrar_lote).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fab_cadastrar_lote).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), CadastrarLote.class);
                 startActivityForResult(it, CADASTRAR_LOTE_REQUEST);
             }
         });
-
-        return v;
     }
 
     @Override
@@ -137,7 +143,7 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
     }
 
     private void configura_listView() {
-        listView_lotes = (ListView) v.findViewById(R.id.lista_lotes);
+        listView_lotes = (ListView) view.findViewById(R.id.lista_lotes);
         adapterLote = new AdapterLote(getActivity());
         listView_lotes.setAdapter(adapterLote);
         listView_lotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {

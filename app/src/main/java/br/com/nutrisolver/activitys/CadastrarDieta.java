@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -216,6 +217,16 @@ public class CadastrarDieta extends AppCompatActivity {
         listView_editar_ingredientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                try {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+
                 if (listView_editar_ingredientes.isItemChecked(i)) {
                     view.findViewById(R.id.listView_poss_ing_add).setVisibility(View.GONE);
                     view.findViewById(R.id.listView_poss_ing_remove).setVisibility(View.VISIBLE);

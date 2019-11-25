@@ -32,7 +32,7 @@ import br.com.nutrisolver.tools.AdapterDieta;
 import br.com.nutrisolver.tools.DataBaseUtil;
 
 public class DietasFragment extends Fragment implements NovaMainActivity.DataFromActivityToFragment {
-    private View v;
+    private View view;
     private ListView listView_dietas;
     private AdapterDieta adapterDieta = null;
     private ArrayList<Dieta> lista_dietas;
@@ -51,7 +51,14 @@ public class DietasFragment extends Fragment implements NovaMainActivity.DataFro
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("MY_TABS", "DietasFragment onCreateView");
-        v = inflater.inflate(R.layout.fragment_dietas, container, false);
+        return inflater.inflate(R.layout.fragment_dietas, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        this.view = view;
 
         from_onSaveInstanceState = false;
         lista_dietas = null;
@@ -62,20 +69,18 @@ public class DietasFragment extends Fragment implements NovaMainActivity.DataFro
 
         sharedpreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
-        progressBar = v.findViewById(R.id.progress_bar);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         configura_listView();
         atualiza_lista_de_dietas();
 
-        v.findViewById(R.id.fab_cadastrar_dieta).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fab_cadastrar_dieta).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), CadastrarDieta.class);
                 startActivityForResult(it, CADASTRAR_DIETA_REQUEST);
             }
         });
-
-        return v;
     }
 
     @Override
@@ -133,7 +138,7 @@ public class DietasFragment extends Fragment implements NovaMainActivity.DataFro
     }
 
     private void configura_listView() {
-        listView_dietas = (ListView) v.findViewById(R.id.lista_dietas);
+        listView_dietas = (ListView) view.findViewById(R.id.lista_dietas);
         adapterDieta = new AdapterDieta(getActivity());
         listView_dietas.setAdapter(adapterDieta);
         listView_dietas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
