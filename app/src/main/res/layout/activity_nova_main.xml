@@ -24,14 +24,16 @@
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
+                android:background="@color/colorPrimary"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/colorAccent"
+                app:tabIndicatorColor="@color/colorPrimaryLight"
                 app:tabIndicatorHeight="4dp"
                 app:tabMaxWidth="0dp"
                 app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/tabLayout_selected_text_color"
-                app:tabTextColor="@color/tabLayout_unselected_text_color"/>
+                app:tabSelectedTextColor="@color/textOnPrimary"
+                app:tabTextColor="@color/tabLayout_unselected_text_color"
+                android:elevation="20dp"
+                tools:targetApi="lollipop" />
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/view_pager"

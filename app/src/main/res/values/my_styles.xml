@@ -4,7 +4,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/exo_2</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/textOnSecundary</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:padding">15dp</item>
@@ -15,23 +15,24 @@
     <style name="botao_cancelar">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/colorAccent</item>
         <item name="android:fontFamily">@font/exo_2</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/textOnSecundary</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:padding">15dp</item>
         <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:background">@drawable/ripple_effect_secundario</item>
     </style>
 
     <style name="texto_cabecalho">
+        <item name="android:elevation" tools:targetApi="lollipop">20dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:fontFamily">@font/exo_2</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
         <item name="android:textSize">20sp</item>
         <item name="android:padding">8dp</item>
     </style>
@@ -42,12 +43,12 @@
         <item name="android:layout_gravity">bottom|end</item>
         <item name="android:layout_margin">20dp</item>
         <item name="fabSize">auto</item>
-        <item name="android:tint">@android:color/white</item>
+        <item name="android:tint">@color/textOnSecundary</item>
         <item name="fabCustomSize">60dp</item>
         <item name="maxImageSize">30dp</item>
         <item name="srcCompat">@drawable/baseline_add_black_48</item>
-        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorPrimary</item>
-        <item name="rippleColor">@color/colorPrimaryDark</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorPrimaryLight</item>
+        <item name="rippleColor">@color/colorPrimary</item>
     </style>
 
     <style name="FullyTranslucent" parent="android:Theme.Translucent.NoTitleBar">
@@ -63,7 +64,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:indeterminate">true</item>
-        <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:indeterminateTint" tools:targetApi="lollipop">@color/colorPrimaryLight</item>
     </style>
 
     <style name="divider_horizontal_toolbar">

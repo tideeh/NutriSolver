@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="65dp"
     android:layout_margin="10dp"
-    android:background="@drawable/background_list_selected"
-    android:elevation="5dp"
-    tools:targetApi="lollipop">
+    android:background="@drawable/background_list_selected">
 
     <TextView
         android:id="@+id/lista_ingrediente_nome"
@@ -35,6 +33,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:tint="@color/colorPrimaryLight"
             android:layout_gravity="center"
             android:id="@+id/listView_poss_ing_add"
             android:layout_width="wrap_content"
@@ -43,6 +42,7 @@
             android:visibility="visible" />
 
         <ImageView
+            android:tint="@color/colorPrimaryLight"
             android:layout_gravity="center"
             android:id="@+id/listView_poss_ing_remove"
             android:layout_width="wrap_content"

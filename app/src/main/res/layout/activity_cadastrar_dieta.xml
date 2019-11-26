@@ -59,14 +59,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom|center_horizontal"
-                android:orientation="horizontal"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
+                android:gravity="bottom"
+                android:orientation="vertical"
+                android:paddingTop="20dp">
 
                 <Button
                     style="@style/botao_confirmar"
-                    android:layout_marginBottom="0dp"
+                    android:layout_gravity="center_horizontal"
                     android:onClick="salvar_dieta"
                     android:text="@string/salvar_dieta" />
 

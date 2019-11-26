@@ -32,21 +32,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom|center_horizontal"
+                android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
+                android:paddingTop="20dp">
 
                 <Button
                     style="@style/botao_confirmar"
-                    android:layout_marginBottom="0dp"
                     android:onClick="editar_dieta"
                     android:text="@string/editar_dieta" />
 
                 <Button
                     style="@style/botao_cancelar"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="0dp"
                     android:onClick="executar_teste"
                     android:text="@string/executar_teste" />
 

@@ -3,25 +3,33 @@
 
     <item android:state_selected="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark" />
+            <corners android:radius="@dimen/angulo_canto_botao" />
+            <stroke android:width="@dimen/borda_botao_espessura" android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorPrimary" />
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark" />
+            <corners android:radius="@dimen/angulo_canto_botao" />
+            <stroke android:width="@dimen/borda_botao_espessura" android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorPrimary" />
         </shape>
     </item>
 
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark" />
+            <corners android:radius="@dimen/angulo_canto_botao" />
+            <stroke android:width="@dimen/borda_botao_espessura" android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorPrimary" />
         </shape>
     </item>
 
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary" />
+            <corners android:radius="@dimen/angulo_canto_botao" />
+            <stroke android:width="@dimen/borda_botao_espessura" android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorPrimaryLight" />
         </shape>
     </item>
 
