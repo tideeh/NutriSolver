@@ -95,6 +95,9 @@ public class CadastrarLote extends AppCompatActivity {
 
         DataBaseUtil.getInstance().insertDocument("lotes", lote.getId(), lote);
 
+        // envia o lote para o fragment
+        NovaMainActivity.sendData("LotesFragment", "adiciona_lote", lote);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

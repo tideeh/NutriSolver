@@ -78,7 +78,7 @@ public class DietasFragment extends Fragment implements NovaMainActivity.DataFro
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), CadastrarDieta.class);
-                startActivityForResult(it, CADASTRAR_DIETA_REQUEST);
+                startActivity(it);
             }
         });
     }
@@ -124,7 +124,7 @@ public class DietasFragment extends Fragment implements NovaMainActivity.DataFro
                     });
         }
     }
-
+/*
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -133,9 +133,11 @@ public class DietasFragment extends Fragment implements NovaMainActivity.DataFro
             Dieta d = (Dieta) data.getParcelableExtra("dieta_cadastrada");
             Log.i("MY_ACTIVITY_RESULT", "Dieta nome: " + d.getNome());
 
-            adapterDieta.addItem(d);
+            //adapterDieta.addItem(d);
         }
     }
+
+ */
 
     private void configura_listView() {
         listView_dietas = (ListView) view.findViewById(R.id.lista_dietas);
@@ -154,11 +156,16 @@ public class DietasFragment extends Fragment implements NovaMainActivity.DataFro
     }
 
     @Override
-    public void sendData(String data) {
+    public void sendData(String data, Object object) {
         switch (data){
             case "atualiza_dietas":
                 fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
                 atualiza_lista_de_dietas();
+                break;
+
+            case "adiciona_dieta":
+                if(adapterDieta != null)
+                    adapterDieta.addItem((Dieta) object);
                 break;
 
             default:

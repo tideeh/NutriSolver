@@ -94,7 +94,7 @@ public class CadastrarFazenda extends AppCompatActivity {
     private void finaliza_cadastro() {
         ToastUtil.show(getApplicationContext(), "Fazenda cadastrada com sucesso!", Toast.LENGTH_SHORT);
         progressBar.setVisibility(View.GONE);
-        startActivity(new Intent(getApplicationContext(), TelaPrincipal.class));
+        startActivity(new Intent(getApplicationContext(), NovaMainActivity.class));
         finish();
     }
 

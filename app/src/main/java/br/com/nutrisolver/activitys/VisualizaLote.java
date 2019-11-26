@@ -24,19 +24,19 @@ import java.util.Objects;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
+import br.com.nutrisolver.tools.AdapterDieta;
 import br.com.nutrisolver.tools.AdapterDietaAtual;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.UserUtil;
 
 public class VisualizaLote extends AppCompatActivity {
-    private static final int EDITAR_DIETA_REQUEST = 1002;
+    private static final int CADASTRAR_DIETA_REQUEST = 1001;
 
     private String lote_id;
     private String lote_nome;
     private ProgressBar progressBar;
-    private ListView listView_dieta_atual;
-    private String dieta_ativa_id;
-    private List<String> ingredientes_nomes;
+    private ListView listView_dietas;
+    private AdapterDieta adapterDieta = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,6 @@ public class VisualizaLote extends AppCompatActivity {
         lote_nome = it.getStringExtra("lote_nome");
 
         if (lote_id == null || lote_nome == null) {
-            startActivity(new Intent(this, TelaPrincipal.class));
             finish();
         }
 
@@ -58,26 +57,29 @@ public class VisualizaLote extends AppCompatActivity {
         atualiza_lista_dieta();
         configura_toolbar();
 
+        findViewById(R.id.fab_cadastrar_dieta).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(VisualizaLote.this, CadastrarDieta.class);
+                startActivityForResult(it, CADASTRAR_DIETA_REQUEST);
+            }
+        });
     }
 
     private void atualiza_lista_dieta() {
         progressBar.setVisibility(View.VISIBLE);
 
-        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("dietas", new String[]{"lote_id", "ativo"}, new Object[]{lote_id, true}, 1)
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("dietas", new String[]{"lote_id", "ativo"}, new Object[]{lote_id, true})
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            ingredientes_nomes = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.i("MY_FIRESTORE", "atualiza_lista_dieta: entrou 1");
-                                ingredientes_nomes = document.toObject(Dieta.class).getIngredientes_nomes();
-                                dieta_ativa_id = document.toObject(Dieta.class).getId();
+                            adapterDieta.clear();
+                            if (task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    adapterDieta.addItem(document.toObject(Dieta.class));
+                                }
                             }
-
-                            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(VisualizaLote.this, ingredientes_nomes);
-                            //ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(VisualizaLote.this, android.R.layout.simple_list_item_1, ingredientes);
-                            listView_dieta_atual.setAdapter(itemsAdapter);
                         } else {
                             Log.i("MY_FIRESTORE", "atualiza_lista_dieta: " + task.getException());
                         }
@@ -120,34 +122,23 @@ public class VisualizaLote extends AppCompatActivity {
         }
     }
 
-    public void editar_dieta(View view) {
-        Intent it = new Intent(this, EditarDieta.class);
-        it.putExtra("lote_id", lote_id);
-        it.putExtra("lote_nome", lote_nome);
-        if (dieta_ativa_id != null)
-            it.putExtra("dieta_ativa_id", dieta_ativa_id);
-
-        startActivityForResult(it, EDITAR_DIETA_REQUEST);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EDITAR_DIETA_REQUEST && resultCode == 1) { // foi editado uma nova dieta, atualiza a lista com os ingredientes_nomes
-            Dieta d = (Dieta) data.getParcelableExtra("dieta_editada");
-            ingredientes_nomes = d.getIngredientes_nomes();
+        if (requestCode == CADASTRAR_DIETA_REQUEST && resultCode == 1) { // foi cadastrada nova dieta, verifica se é desse lote, se for adiciona na lista
+            Dieta d = (Dieta) data.getParcelableExtra("dieta_cadastrada");
 
-            AdapterDietaAtual itemsAdapter = new AdapterDietaAtual(this, ingredientes_nomes);
-            //ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientes);
-            listView_dieta_atual.setAdapter(itemsAdapter);
-
-            dieta_ativa_id = d.getId();
+            if(d.getLote_id().equals(lote_id)){
+                adapterDieta.addItem(d);
+            }
         }
     }
 
     private void configura_listView() {
-        listView_dieta_atual = (ListView) findViewById(R.id.listView_dieta_atual);
+        listView_dietas = (ListView) findViewById(R.id.listView_dietas);
+        adapterDieta = new AdapterDieta(this);
+        listView_dietas.setAdapter(adapterDieta);
     }
 
     public void executar_teste(View view) {

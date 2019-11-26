@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import br.com.nutrisolver.R;
+import br.com.nutrisolver.objects.Dieta;
 import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.AdapterLote;
 import br.com.nutrisolver.tools.DataBaseUtil;
@@ -83,7 +84,7 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), CadastrarLote.class);
-                startActivityForResult(it, CADASTRAR_LOTE_REQUEST);
+                startActivity(it);
             }
         });
     }
@@ -129,7 +130,7 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
                     });
         }
     }
-
+/*
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -141,6 +142,8 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
             adapterLote.addItem(l);
         }
     }
+
+ */
 
     private void configura_listView() {
         listView_lotes = (ListView) view.findViewById(R.id.lista_lotes);
@@ -159,13 +162,17 @@ public class LotesFragment extends Fragment implements NovaMainActivity.DataFrom
     }
 
     @Override
-    public void sendData(String data) {
+    public void sendData(String data, Object object) {
         switch (data){
             case "atualiza_lotes":
                 Log.i("MY_SENDDATA", "atualiza_lotes");
-                sharedpreferences = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
                 fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
                 atualiza_lista_de_lotes();
+                break;
+
+            case "adiciona_lote":
+                if(adapterLote != null)
+                    adapterLote.addItem((Lote) object);
                 break;
 
             default:

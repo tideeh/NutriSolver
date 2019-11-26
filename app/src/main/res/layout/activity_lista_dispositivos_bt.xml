@@ -73,9 +73,9 @@
         </LinearLayout>
 
         <Button
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/button_scan"
-            style="@style/botao_cancelar"
+            style="@style/botao_confirmar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

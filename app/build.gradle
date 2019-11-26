@@ -5,7 +5,7 @@ apply plugin: 'io.fabric'
 // aqui configura o version code e o version name
 ext.versionMajor = 1 // altera quando tem um grande releas
 ext.versionMinor = 0 // altera quando tem um release medio (volta pra 0 quando altera o Major)
-ext.versionPatch = 2 // altera em qualquer release (volta pra 0 quando altera o Minor)
+ext.versionPatch = 3 // altera em qualquer release (volta pra 0 quando altera o Minor)
 ext.versionClassifier = "ALFA" // nome da versao (null) para desativar
 //ext.isBeta = true
 ext.minimumSdkVersion = 19 // altera quando precisar aumentar o min SDK version (novas apis)

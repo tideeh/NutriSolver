@@ -15,47 +15,22 @@
 
         <TextView
             style="@style/texto_cabecalho"
-            android:text="@string/dieta_atual" />
+            android:text="@string/dietas" />
 
-        <LinearLayout
+        <ListView
+            android:id="@+id/listView_dietas"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ListView
-                android:id="@+id/listView_dieta_atual"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="9">
-            </ListView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:paddingTop="20dp">
-
-                <Button
-                    style="@style/botao_confirmar"
-                    android:onClick="editar_dieta"
-                    android:text="@string/editar_dieta" />
-
-                <Button
-                    style="@style/botao_cancelar"
-                    android:layout_marginStart="10dp"
-                    android:onClick="executar_teste"
-                    android:text="@string/executar_teste" />
-
-            </LinearLayout>
-
-        </LinearLayout>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_cadastrar_dieta"
+        style="@style/floating_button_add" />
+
     <ProgressBar
-        style="@style/my_progress_bar"
         android:id="@+id/progress_bar"
-        android:visibility="gone"/>
+        style="@style/my_progress_bar"
+        android:visibility="gone" />
 
 </FrameLayout>

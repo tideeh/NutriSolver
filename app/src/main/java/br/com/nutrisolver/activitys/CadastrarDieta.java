@@ -10,14 +10,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,10 +35,13 @@ import java.util.Objects;
 
 import br.com.nutrisolver.R;
 import br.com.nutrisolver.objects.Dieta;
+import br.com.nutrisolver.objects.Fazenda;
 import br.com.nutrisolver.objects.Ingrediente;
+import br.com.nutrisolver.objects.Lote;
 import br.com.nutrisolver.tools.AdapterIngredienteNome;
 import br.com.nutrisolver.tools.DataBaseUtil;
 import br.com.nutrisolver.tools.ToastUtil;
+import br.com.nutrisolver.tools.UserUtil;
 
 public class CadastrarDieta extends AppCompatActivity {
     private final long TIMEOUT_DB = 30 * 60 * 1000; // ms (MIN * 60 * 100)
@@ -51,6 +57,10 @@ public class CadastrarDieta extends AppCompatActivity {
     private String fazenda_corrente_id;
     private String fazenda_corrente_nome;
 
+    private List<String> lotes_nomes;
+    private List<String> lotes_ids;
+    private Spinner spinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +71,13 @@ public class CadastrarDieta extends AppCompatActivity {
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1");
         fazenda_corrente_nome = sharedpreferences.getString("fazenda_corrente_nome", "-1");
+        spinner = findViewById(R.id.spn_cadastrar_dieta);
 
         configura_listView();
         atualiza_lista_ingredientes();
         configura_toolbar();
+
+        configura_spinner();
     }
 
     private void atualiza_lista_ingredientes() {
@@ -136,11 +149,6 @@ public class CadastrarDieta extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        String faz_nome = getIntent().getStringExtra("faz_corrente_nome");
-        if (faz_nome == null)
-            faz_nome = " ";
-        getSupportActionBar().setTitle("Fazenda: " + faz_nome);
     }
 
     public void salvar_dieta(View view) {
@@ -157,6 +165,11 @@ public class CadastrarDieta extends AppCompatActivity {
 
         dieta = new Dieta(fazenda_corrente_id);
         dieta.setNome(input_nome_dieta.getText().toString());
+
+        int spinner_pos = spinner.getSelectedItemPosition();
+        if(spinner_pos != 0){
+            dieta.setLote_id(lotes_ids.get(spinner_pos));
+        }
 
         int len = listView_editar_ingredientes.getCount();
         SparseBooleanArray checked = listView_editar_ingredientes.getCheckedItemPositions();
@@ -176,6 +189,9 @@ public class CadastrarDieta extends AppCompatActivity {
 
         // salva a nova dieta
         DataBaseUtil.getInstance().insertDocument("dietas", dieta.getId(), dieta);
+
+        // envia a dieta para o fragment
+        NovaMainActivity.sendData("DietasFragment", "adiciona_dieta", dieta);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -235,6 +251,35 @@ public class CadastrarDieta extends AppCompatActivity {
                     view.findViewById(R.id.listView_poss_ing_add).setVisibility(View.VISIBLE);
                 }
 
+            }
+        });
+    }
+
+    private void configura_spinner() {
+
+        DataBaseUtil.getInstance().getDocumentsWhereEqualTo("lotes", "fazenda_id", fazenda_corrente_id).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    lotes_nomes = new ArrayList<>();
+                    lotes_nomes.add("Selecione");
+                    lotes_ids = new ArrayList<>();
+                    lotes_ids.add("-1"); // ignora a 1 posicao
+                    if(task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            lotes_nomes.add(document.toObject(Lote.class).getNome());
+                            lotes_ids.add(document.toObject(Lote.class).getId());
+                        }
+
+                        //String[] opcoes = lotes_nomes.toArray(new String[0]);
+                        ArrayAdapter<String> spn_adapter = new ArrayAdapter<String>(CadastrarDieta.this, android.R.layout.simple_spinner_dropdown_item, lotes_nomes);
+                        spinner.setAdapter(spn_adapter);
+
+                        //spinner.setSelection(fazendas_ids.indexOf(fazenda_corrente_id));
+                    }
+                } else {
+                    Log.i("MY_FIRESTORE", "Erro ao recuperar documentos Fazendas: " + task.getException());
+                }
             }
         });
     }

@@ -41,9 +41,9 @@ public class NovaMainActivity extends AppCompatActivity {
     LotesFragment lotesFragment;
     DietasFragment dietasFragment;
     TestesFragment testesFragment;
-    DataFromActivityToFragment dataFromActivityToLotesFragment;
-    DataFromActivityToFragment dataFromActivityToDietasFragment;
-    DataFromActivityToFragment dataFromActivityToTestesFragment;
+    static DataFromActivityToFragment dataFromActivityToLotesFragment;
+    static DataFromActivityToFragment dataFromActivityToDietasFragment;
+    static DataFromActivityToFragment dataFromActivityToTestesFragment;
     private boolean first_select_ignored;
 
     private int[] tabIcons = {
@@ -233,8 +233,8 @@ public class NovaMainActivity extends AppCompatActivity {
                                         fazenda_corrente_id = fazendas_ids.get(position);
 
                                         //envia_sinal_pros_fragments();
-                                        dataFromActivityToLotesFragment.sendData("atualiza_lotes");
-                                        dataFromActivityToDietasFragment.sendData("atualiza_dietas");
+                                        dataFromActivityToLotesFragment.sendData("atualiza_lotes", null);
+                                        dataFromActivityToDietasFragment.sendData("atualiza_dietas", null);
 
                                         getSupportActionBar().setTitle("Fazenda: " + fazenda_corrente_nome);
                                     }
@@ -308,10 +308,32 @@ public class NovaMainActivity extends AppCompatActivity {
     }
 
     public interface DataFromActivityToFragment {
-        void sendData(String data);
+        void sendData(String data, Object object);
     }
 
     public void sidebar_testar_amostra(View v) {
         startActivity(new Intent(this, ExecutarTeste1.class));
+    }
+
+    public static void sendData(String fragment, String data, Object object){
+        switch (fragment){
+            case "DietasFragment":
+                if(dataFromActivityToDietasFragment != null)
+                    dataFromActivityToDietasFragment.sendData(data, object);
+                break;
+
+            case "LotesFragment":
+                if(dataFromActivityToLotesFragment != null)
+                    dataFromActivityToLotesFragment.sendData(data, object);
+                break;
+
+            case "TestesFragment":
+                if(dataFromActivityToTestesFragment != null)
+                    dataFromActivityToTestesFragment.sendData(data, object);
+                break;
+
+                default:
+                    break;
+        }
     }
 }

@@ -43,4 +43,6 @@
     <string name="tab2_title">Dietas</string>
     <string name="tab3_title">Testes</string>
     <string name="nome_da_dieta">Nome da Dieta</string>
+    <string name="dietas">Dietas</string>
+    <string name="cadastrar_dieta">Cadastrar Dieta</string>
 </resources>
