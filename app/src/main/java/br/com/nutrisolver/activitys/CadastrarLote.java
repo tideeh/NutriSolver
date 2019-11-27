@@ -91,7 +91,10 @@ public class CadastrarLote extends AppCompatActivity {
 
         String nome_lote = input_nome_lote.getText().toString();
 
-        lote = new Lote(nome_lote, fazenda_corrente_id);
+        lote = new Lote();
+        lote.setNome(nome_lote);
+        lote.setFazenda_id(fazenda_corrente_id);
+        lote.setDono_uid(UserUtil.getCurrentUser().getUid());
 
         DataBaseUtil.getInstance().insertDocument("lotes", lote.getId(), lote);
 

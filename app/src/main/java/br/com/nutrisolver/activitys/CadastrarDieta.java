@@ -163,8 +163,10 @@ public class CadastrarDieta extends AppCompatActivity {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        dieta = new Dieta(fazenda_corrente_id);
+        dieta = new Dieta();
         dieta.setNome(input_nome_dieta.getText().toString());
+        dieta.setFazenda_id(fazenda_corrente_id);
+        dieta.setDono_uid(UserUtil.getCurrentUser().getUid());
 
         int spinner_pos = spinner.getSelectedItemPosition();
         if(spinner_pos != 0){

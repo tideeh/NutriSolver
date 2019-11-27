@@ -171,7 +171,8 @@ public class EditarDieta extends AppCompatActivity {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        dieta = new Dieta(lote_id);
+        dieta = new Dieta();
+        dieta.setLote_id(lote_id);
 
         int len = listView_editar_ingredientes.getCount();
         SparseBooleanArray checked = listView_editar_ingredientes.getCheckedItemPositions();

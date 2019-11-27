@@ -13,26 +13,21 @@ public class Lote implements Parcelable {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
     private String id = UUID.randomUUID().toString();
+    private String dono_uid = ""; // necessario em todos objetos
+    private String fazenda_id = "";
+
     private String nome = "";
     private String data_criacao = sdf.format(new Timestamp(System.currentTimeMillis()));
-    private String fazenda_id = "";
+
 
     public Lote(){}
 
-    public Lote(String nome){
-        this.nome = nome;
-    }
-
-    public Lote(String nome, String fazenda_id){
-        this.nome = nome;
-        this.fazenda_id = fazenda_id;
-    }
-
     protected Lote(Parcel in) {
         id = in.readString();
+        dono_uid = in.readString();
+        fazenda_id = in.readString();
         nome = in.readString();
         data_criacao = in.readString();
-        fazenda_id = in.readString();
     }
 
     public static final Creator<Lote> CREATOR = new Creator<Lote>() {
@@ -75,6 +70,15 @@ public class Lote implements Parcelable {
         this.fazenda_id = fazenda_id;
     }
 
+    public String getDono_uid() {
+        return dono_uid;
+    }
+
+    public void setDono_uid(String dono_uid) {
+        this.dono_uid = dono_uid;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -83,8 +87,9 @@ public class Lote implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(dono_uid);
+        dest.writeString(fazenda_id);
         dest.writeString(nome);
         dest.writeString(data_criacao);
-        dest.writeString(fazenda_id);
     }
 }

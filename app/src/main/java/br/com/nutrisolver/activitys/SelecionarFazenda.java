@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -94,7 +95,17 @@ public class SelecionarFazenda extends AppCompatActivity {
     }
 
     public void cadastrar_fazenda(View view) {
-        startActivity(new Intent(this, CadastrarFazenda.class));
+        startActivityForResult(new Intent(this, CadastrarFazenda.class), 1001);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1001 && resultCode == 1) {
+            startActivity(new Intent(this, NovaMainActivity.class));
+            finish();
+        }
     }
 
     @Override

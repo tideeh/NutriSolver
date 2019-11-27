@@ -73,13 +73,16 @@ public class CadastrarFazenda extends AppCompatActivity {
 
         String nome_fazenda = input_nome_fazenda.getText().toString();
 
-        fazenda = new Fazenda(nome_fazenda, UserUtil.getCurrentUser().getUid());
+        fazenda = new Fazenda();
+        fazenda.setNome(nome_fazenda);
+        fazenda.setDono_uid(UserUtil.getCurrentUser().getUid());
 
         DataBaseUtil.getInstance().insertDocument("fazendas", fazenda.getId(), fazenda);
         //db.collection("fazendas").document(fazenda.getId()).set(fazenda);
 
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString("fazenda_corrente_id", fazenda.getId());
+        editor.putString("fazenda_corrente_nome", fazenda.getNome());
         editor.apply();
 
         Handler handler = new Handler();
@@ -94,7 +97,10 @@ public class CadastrarFazenda extends AppCompatActivity {
     private void finaliza_cadastro() {
         ToastUtil.show(getApplicationContext(), "Fazenda cadastrada com sucesso!", Toast.LENGTH_SHORT);
         progressBar.setVisibility(View.GONE);
-        startActivity(new Intent(getApplicationContext(), NovaMainActivity.class));
+
+        Intent it = new Intent();
+        setResult(1, it);
+
         finish();
     }
 

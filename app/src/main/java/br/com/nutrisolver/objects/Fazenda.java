@@ -10,20 +10,13 @@ public class Fazenda {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
 
     private String id = UUID.randomUUID().toString();
+    private String dono_uid = ""; // necessario em todos objetos
+
     private String nome = "";
     private String data_criacao = sdf.format(new Timestamp(System.currentTimeMillis()));
-    private String dono_uid = "";
+
 
     public Fazenda(){}
-
-    public Fazenda(String nome){
-        this.nome = nome;
-    }
-
-    public Fazenda(String nome, String dono_uid){
-        this.nome = nome;
-        this.dono_uid = dono_uid;
-    }
 
     public String getNome() {
         return nome;
